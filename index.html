@@ -313,46 +313,142 @@
         <li>Fitur yang diusulkan: workflow engine berbasis Factory Pattern + Chain of Responsibility</li>
     </ul>
 
-    <!-- ==================== BAB 2 – METODOLOGI & DESAIN PATTERN ==================== -->
+      <!-- ==================== BAB 2 – METODOLOGI & DESAIN PATTERN ==================== -->
     <h2>BAB 2 – METODOLOGI & DESAIN PATTERN</h2>
     
     <h3>2.1 Design Pattern yang Digunakan</h3>
-    <table>
-        <thead><tr><th>Pattern</th><th>Lokasi Implementasi</th><th>Manfaat</th></tr></thead>
-        <tbody>
-            <tr><td><strong>Factory Pattern</strong></code></code></code></th><th><code>ApprovalHandlerFactory.createWorkflow()</code></code></code></th><th>Memusatkan pembuatan rantai handler, memudahkan perubahan urutan/level tanpa mengubah service.</code></code></code></th>
+    <table style="width:100%; border-collapse: collapse; margin: 20px 0;">
+        <thead>
             <tr>
-            
-    <h3>2.2 Teknik Riset</h3>
-    <p>Riset dilakukan dengan metode survei terhadap 3 responden (Manager/Staff Procurement) untuk menggali pain points alur approval eksisting, dilanjutkan dengan user testing prototype.</p>
-    <table>
-        <thead><tr><th>Teknik</th><th>Jumlah Responden</th><th>Tujuan</th></tr></thead>
-        <tbody><tr><td>Survei & Usability Testing</td><td>3 orang</td><td>Menggali pengalaman, pain points, serta menguji prototype workflow</td></tr></tbody>
+                <th style="border: 1px solid #aaa; padding: 10px; background: #f0f3f8; font-weight: bold;">Pattern</th>
+                <th style="border: 1px solid #aaa; padding: 10px; background: #f0f3f8; font-weight: bold;">Lokasi Implementasi</th>
+                <th style="border: 1px solid #aaa; padding: 10px; background: #f0f3f8; font-weight: bold;">Manfaat</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="border: 1px solid #aaa; padding: 8px; vertical-align: top;"><strong>Factory Pattern</strong></td>
+                <td style="border: 1px solid #aaa; padding: 8px; vertical-align: top;"><code>ApprovalHandlerFactory.createWorkflow()</code></td>
+                <td style="border: 1px solid #aaa; padding: 8px; vertical-align: top;">Memusatkan pembuatan rantai handler (Manager → DivHead → Director), memudahkan perubahan urutan/level tanpa mengubah service. Menerapkan prinsip Open/Closed Principle.</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #aaa; padding: 8px; vertical-align: top;"><strong>Chain of Responsibility</strong></td>
+                <td style="border: 1px solid #aaa; padding: 8px; vertical-align: top;"><code>ManagerHandler, DivisionHeadHandler, DirectorHandler</code></td>
+                <td style="border: 1px solid #aaa; padding: 8px; vertical-align: top;">Setiap handler hanya memproses jika status sesuai; setelah itu berhenti (tidak auto-forward). Memberikan kontrol manual per role dan memungkinkan penambahan level approval baru tanpa mengubah handler lain.</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #aaa; padding: 8px; vertical-align: top;"><strong>MVC Pattern</strong></td>
+                <td style="border: 1px solid #aaa; padding: 8px; vertical-align: top;"><code>ProcurementRequest</code> (Model), <code>ApprovalController</code> (Controller), <code>index.html</code> (View)</td>
+                <td style="border: 1px solid #aaa; padding: 8px; vertical-align: top;">Memisahkan logika bisnis (Model), kontrol (Controller), dan tampilan (View). Memudahkan pengembangan, testing, dan pemeliharaan kode.</td>
+            </tr>
+        </tbody>
     </table>
 
-    <!-- ==================== BAB 3 – RISET PENGGUNA ==================== -->
-    <h2>BAB 3 – RISET PENGGUNA & ANALISIS PAIN POINTS</h2>
+    <!-- ==================== BAB 3 – PENJELASAN FACTORY PATTERN & CHAIN OF RESPONSIBILITY ==================== -->
+    <h2>BAB 3 – PENJELASAN FACTORY PATTERN & CHAIN OF RESPONSIBILITY</h2>
     
-    <h3>3.1 Profil Responden</h3>
-    <table>
-        <thead><tr><th>Inisial</th><th>Role</th><th>Pengalaman approval</th></tr></thead>
-        <tbody><tr><td>F</td><td>Manager</td><td>&gt;2 tahun</td></tr><tr><td>A</td><td>Kepala Divisi</td><td>&gt;4 tahun</td></tr><tr><td>R</td><td>Staff Procurement</td><td>1 tahun</td></tr></tbody>
-    </table>
-
-    <div style="background:#fff3e0; border-left:4px solid #f5a623; padding:15px; margin:15px 0;">
-        <strong>📌 Pain Points yang Ditemukan:</strong>
-        <ul><li>100% responden mengeluhkan ketidakjelasan jenjang approval (batasan nominal tidak terdefinisi).</li>
-        <li>100% menginginkan history approval otomatis untuk keperluan audit.</li>
-        <li>67% menyebut tumpang tindih kewenangan antara level 2 dan level 3.</li></ul>
+    <h3>3.1 Pengertian Factory Pattern</h3>
+    <p><strong>Factory Pattern</strong> adalah design pattern creational yang menyediakan antarmuka untuk membuat objek tanpa mengekspos logika pembuatan objek kepada klien. Dalam konteks sistem approval berjenjang, Factory Pattern digunakan untuk membuat dan merangkai handler-handler approval (Manager, Kepala Divisi, Direksi) menjadi sebuah workflow engine yang siap pakai.</p>
+    
+    <div class="explanation-box">
+        <strong>📌 Bagaimana Factory Pattern Bekerja pada Sistem Ini:</strong>
+        <ol style="margin-top: 10px; margin-left: 20px;">
+            <li>Kelas <code>ApprovalHandlerFactory</code> memiliki method statis <code>createWorkflow()</code>.</li>
+            <li>Method ini membuat instance dari <code>ManagerHandler</code>, <code>DivisionHeadHandler</code>, dan <code>DirectorHandler</code>.</li>
+            <li>Ketiga handler tersebut dirangkai berurutan menggunakan method <code>setNext()</code>: Manager → DivisionHead → Director.</li>
+            <li>Handler pertama (Manager) dikembalikan ke pemanggil (ApprovalService).</li>
+            <li>Dengan demikian, seluruh logika perangkaian handler disembunyikan di dalam Factory, dan service hanya perlu memanggil <code>createWorkflow()</code> tanpa tahu detail perangkaiannya.</li>
+        </ol>
     </div>
 
-    <h3>3.2 Aturan Bisnis yang Ditetapkan</h3>
-    <table>
-        <thead><tr><th>Nominal Pengadaan (Rp)</th><th>Level Approval</th><th>Status Akhir</th></tr></thead>
-        <tbody><tr><td>≤ 50.000.000</td><td>Manager</td><td>APPROVED</td></tr>
-        <tr><td>51.000.000 – 250.000.000</td><td>Manager → Kepala Divisi</td><td>APPROVED</td></tr>
-        <tr><td>&gt; 250.000.000 (max 1M)</td><td>Manager → Kepala Divisi → Direksi</td><td>APPROVED</td></tr></tbody>
+    <div class="code-block">
+<span class="comment">// Factory Pattern: membuat rantai handler tanpa mengekspos logika perangkaian</span>
+public class ApprovalHandlerFactory {
+    public static ApprovalHandler createWorkflow() {
+        ManagerHandler manager = new ManagerHandler();           <span class="comment">// Buat handler Manager</span>
+        DivisionHeadHandler division = new DivisionHeadHandler(); <span class="comment">// Buat handler Kepala Divisi</span>
+        DirectorHandler director = new DirectorHandler();         <span class="comment">// Buat handler Direksi</span>
+        
+        manager.setNext(division);   <span class="comment">// Rangkai: Manager → DivisionHead</span>
+        division.setNext(director);  <span class="comment">// Rangkai: DivisionHead → Director</span>
+        
+        return manager;  <span class="comment">// Kembalikan handler pertama sebagai entry point</span>
+    }
+}
+    </div>
+
+    <h3>3.2 Pengertian Chain of Responsibility</h3>
+    <p><strong>Chain of Responsibility</strong> adalah design pattern behavioral yang memungkinkan suatu request melewati rantai handler, di mana setiap handler memiliki kesempatan untuk memproses request atau meneruskannya ke handler berikutnya. Dalam sistem approval berjenjang, setiap level approval (Manager, Kepala Divisi, Direksi) adalah sebuah handler dalam rantai.</p>
+    
+    <div class="explanation-box">
+        <strong>📌 Bagaimana Chain of Responsibility Bekerja pada Sistem Ini:</strong>
+        <ol style="margin-top: 10px; margin-left: 20px;">
+            <li>Setiap handler mengimplementasikan interface <code>ApprovalHandler</code> dengan method <code>handle()</code>.</li>
+            <li>Ketika method <code>handle()</code> dipanggil, handler akan memeriksa apakah status request sesuai dengan tanggung jawabnya.</li>
+            <li>Jika sesuai, handler akan:
+                <ul><li>Mencatat history approval</li>
+                <li>Memperbarui status request menggunakan aturan bisnis (nextStatusAfter)</li>
+                <li><strong>TIDAK otomatis melanjutkan ke handler berikutnya</strong> - ini memastikan approval manual per level</li></ul>
+            </li>
+            <li>Jika status tidak sesuai, handler akan meneruskan request ke handler berikutnya dalam rantai (jika ada).</li>
+            <li>Dengan mekanisme ini, alur approval berjenjang dapat berjalan: Manager (level 1) → Kepala Divisi (level 2) → Direksi (level 3).</li>
+        </ol>
+    </div>
+
+    <div class="code-block">
+<span class="comment">// Contoh implementasi Chain of Responsibility pada ManagerHandler</span>
+public class ManagerHandler implements ApprovalHandler {
+    private ApprovalHandler next;   <span class="comment">// Referensi ke handler berikutnya (Kepala Divisi)</span>
+
+    @Override
+    public void handle(ProcurementRequest request) {
+        if (request.getStatus() == ApprovalStatus.WAITING_MANAGER) {
+            <span class="comment">// 1. Proses approval oleh Manager</span>
+            request.addHistory("MANAGER", "Manager menyetujui...");
+            request.setStatus(request.nextStatusAfter(ApprovalStatus.WAITING_MANAGER));
+            <span class="comment">// 2. TIDAK LANJUT OTOMATIS - menunggu user role berikutnya klik approve</span>
+        } else if (next != null) {
+            next.handle(request);   <span class="comment">// Lanjut ke handler berikutnya jika status tidak sesuai</span>
+        }
+    }
+}
+    </div>
+
+    <h3>3.3 Alur Approval Berjenjang dari Manager sampai Direktur</h3>
+    <div class="flowchart-box">
+        <strong>📊 Alur Lengkap Approval Berjenjang:</strong><br><br>
+        <strong>1. Pengajuan Baru</strong> → Status: <code>WAITING_MANAGER</code><br>
+        ↓<br>
+        <strong>2. Manager Approve</strong> → System > Handler Manager memproses → Update status berdasarkan nominal:<br>
+        &nbsp;&nbsp;&nbsp;- ≤ 50jt → <code>APPROVED</code> (selesai)<br>
+        &nbsp;&nbsp;&nbsp;- > 50jt → <code>WAITING_DIVISION_HEAD</code><br>
+        ↓<br>
+        <strong>3. Kepala Divisi Approve</strong> (jika status <code>WAITING_DIVISION_HEAD</code>) → Update status:<br>
+        &nbsp;&nbsp;&nbsp;- ≤ 250jt → <code>APPROVED</code> (selesai)<br>
+        &nbsp;&nbsp;&nbsp;- > 250jt → <code>WAITING_DIRECTOR</code><br>
+        ↓<br>
+        <strong>4. Direksi Approve</strong> (jika status <code>WAITING_DIRECTOR</code>) → Update status menjadi <code>APPROVED</code> (selesai)<br>
+        ↓<br>
+        <strong>5. Selesai</strong> → Riwayat approval terekam lengkap dengan timestamp
+    </div>
+
+    <h3>3.4 Keuntungan Penggunaan Kedua Pattern</h3>
+    <table style="width:100%; border-collapse: collapse; margin: 20px 0;">
+        <thead>
+            <tr>
+                <th style="border: 1px solid #aaa; padding: 10px; background: #f0f3f8; font-weight: bold;">Keuntungan</th>
+                <th style="border: 1px solid #aaa; padding: 10px; background: #f0f3f8; font-weight: bold;">Penjelasan</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td style="border: 1px solid #aaa; padding: 8px;"><strong>Fleksibilitas</strong></td><td style="border: 1px solid #aaa; padding: 8px;">Mudah menambah atau mengubah urutan level approval (misal menambah level VP) tanpa mengubah kode yang sudah ada.</td></tr>
+            <tr><td style="border: 1px solid #aaa; padding: 8px;"><strong>Pemisahan Tanggung Jawab</strong></td><td style="border: 1px solid #aaa; padding: 8px;">Setiap handler hanya fokus pada satu level approval, sesuai prinsip Single Responsibility.</td></tr>
+            <tr><td style="border: 1px solid #aaa; padding: 8px;"><strong>Reusability</strong></td><td style="border: 1px solid #aaa; padding: 8px;">Factory dapat digunakan kembali untuk membuat workflow dengan konfigurasi berbeda.</td></tr>
+            <tr><td style="border: 1px solid #aaa; padding: 8px;"><strong>Open/Closed Principle</strong></td><td style="border: 1px solid #aaa; padding: 8px;">Kode terbuka untuk ekstensi (menambah level baru) tetapi tertutup untuk modifikasi (tidak mengubah handler lama).</td></tr>
+            <tr><td style="border: 1px solid #aaa; padding: 8px;"><strong>Manual Control</strong></td><td style="border: 1px solid #aaa; padding: 8px;">Tidak ada auto-forward, setiap level harus klik approve secara manual - sesuai kebutuhan bisnis riil.</td></tr>
+        </tbody>
     </table>
+
 
     <!-- ==================== BAB 4 – IMPLEMENTASI SISTEM ==================== -->
     <h2>BAB 4 – IMPLEMENTASI SISTEM & STRUKTUR KODE</h2>
