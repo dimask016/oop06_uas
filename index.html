@@ -103,6 +103,22 @@
             word-break: break-word;
         }
 
+        .code-block .comment {
+            color: #6a9955;
+            font-style: italic;
+        }
+
+        .folder-structure {
+            background: #1e2a3a;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 10pt;
+            margin: 20px 0;
+            line-height: 1.6;
+        }
+
         .download-btn {
             display: inline-block;
             background-color: #2c6e2f;
@@ -209,7 +225,7 @@
     <!-- LEMBAR PENGESAHAN -->
     <div class="legal-page">
         <h2>LEMBAR PENGESAHAN</h2>
-        <p>Laporan tugas akhir dengan judul <strong>“Implementasi Factory Pattern & Chain of Responsibility pada Workflow Persetujuan Pengadaan Barang/Jasa”</strong> telah disusun dan diajukan oleh:</p>
+        <p>Laporan tugas akhir dengan judul <strong>"Implementasi Factory Pattern & Chain of Responsibility pada Workflow Persetujuan Pengadaan Barang/Jasa"</strong> telah disusun dan diajukan oleh:</p>
         <p><strong>Nama</strong> : Dimas Kurniawan<br>
         <strong>NIM</strong>  : 25120300016<br>
         <strong>Program Studi</strong> : Ilmu Komputer</p>
@@ -223,9 +239,9 @@
             </div>
             <div style="float: right; width: 45%; text-align: center;">
                 Cakrawala, 8 Mei 2026<br>
-                Dosen Pengampu,<br><br><br><br>
+                Dosen Pembimbing,<br><br><br><br>
                 (<span style="text-decoration: underline;">Wahyu Akmaldi, S.Kom., M.Cs.</span>)<br>
-                NIDN.
+                NIDN. 
             </div>
             <div style="clear:both"></div>
         </div>
@@ -283,25 +299,20 @@
         <thead><tr><th>Pattern</th><th>Lokasi Implementasi</th><th>Manfaat</th></tr></thead>
         <tbody>
             <tr><td><strong>Factory Pattern</strong></td><td><code>ApprovalHandlerFactory.createWorkflow()</code></td><td>Memusatkan pembuatan rantai handler, memudahkan perubahan urutan/level tanpa mengubah service.</td></tr>
-            <tr><td><strong>Chain of Responsibility</strong></td><td><code>ManagerHandler, DivisionHeadHandler, DirectorHandler</code></td><td>Setiap handler hanya memproses jika status sesuai; memberikan kontrol manual per role.</td></tr>
-            <tr><td><strong>MVC Pattern</strong></td><td><code>ProcurementRequest</code>, <code>ApprovalController</code>, <code>index.html</code></td><td>Memisahkan logika bisnis, penyimpanan data, dan tampilan.</td></tr>
-        </tbody>
-    </table>
-
+            <tr>
+            
     <!-- BAB 3 – RISET -->
     <h2>BAB 3 – RISET PENGGUNA & ANALISIS PAIN POINTS</h2>
     <h3>3.1 Profil Responden</h3>
     <table>
         <thead><tr><th>Inisial</th><th>Role</th><th>Pengalaman approval</th></tr></thead>
-        <tbody><tr><td>F</td><td>Manager</td><td>&gt;2 tahun</td></tr>
-        <tr><td>A</td><td>Kepala Divisi</td><td>&gt;4 tahun</td></tr>
-        <tr><td>R</td><td>Staff Procurement</td><td>1 tahun</td></tr></tbody>
-    </table>
+        <tbody><tr><td>F</code></code></code></th><th>Manager</th><th>&gt;2 tahun</th>
+            <tr>
+        
     <div style="background:#fff3e0; border-left:4px solid #f5a623; padding:15px; margin:15px 0;">
         <strong>📌 Pain Points yang Ditemukan:</strong>
         <ul><li>100% responden mengeluhkan ketidakjelasan jenjang approval.</li>
-        <li>100% menginginkan history approval otomatis untuk keperluan audit.</li>
-        <li>67% menyebut tumpang tindih kewenangan antara level 2 dan level 3.</li></ul>
+        <li>100% menginginkan history approval otomatis untuk keperluan audit.</li></ul>
     </div>
 
     <!-- BAB 4 – IMPLEMENTASI TAB -->
@@ -338,154 +349,103 @@
         <table>
             <thead><tr><th>Method</th><th>Endpoint</th><th>Deskripsi</th></tr></thead>
             <tbody>
-                <tr><td>GET</td><td>/api/requests/{role}</td><td>List pending request berdasarkan role</td></tr>
-                <tr><td>POST</td><td>/api/approve/{id}/{role}</td><td>Proses approval via workflow engine</td></tr>
-                <tr><td>POST</td><td>/api/submit</td><td>Membuat pengajuan baru</td></tr>
-                <tr><td>GET</td><td>/api/history/{id}</td><td>Riwayat approval suatu request</td></tr>
-            </tbody>
-        </table>
-    </div>
-
+                <tr>
+            
     <div id="pattern" class="tab-content">
         <h3>4.3 Metode Program Java (Factory + Chain of Responsibility)</h3>
-        <p><strong>ApprovalHandlerFactory.java</strong></p>
-        <div class="code-block">
-public static ApprovalHandler createWorkflow() {
-    ManagerHandler m = new ManagerHandler();
-    DivisionHeadHandler d = new DivisionHeadHandler();
-    DirectorHandler dir = new DirectorHandler();
-    m.setNext(d); 
-    d.setNext(dir);
-    return m;
-}
-        </div>
-        <p><strong>ManagerHandler.java</strong></p>
-        <div class="code-block">
-if (request.getStatus() == WAITING_MANAGER) {
-    request.addHistory("MANAGER", "Manager menyetujui (nominal: " + request.getAmount() + ")");
-    request.setStatus(request.nextStatusAfter(WAITING_MANAGER));
-} else if (next != null) next.handle(request);
-        </div>
     </div>
 
     <div id="frontend" class="tab-content">
         <h3>4.4 Prototype Antarmuka dengan HTML/CSS/JS</h3>
-        <p>Frontend mengonsumsi REST API, menyediakan form input, serta daftar approval berdasarkan role. Tampilan interaktif telah disesuaikan dengan gaya skripsi formal.</p>
-        <p>Implementasi lengkap dapat diakses pada:<br> 
-        <a href="https://dimask016.github.io/oop06_uas/" target="_blank" style="color:#1f6392; font-weight:bold;">🌐 https://dimask016.github.io/oop06_uas/</a> (GitHub Pages).</p>
     </div>
 
-    <!-- ==================== BAB 5 – PENJELASAN METODE ==================== -->
-    <h2>BAB 5 – PENJELASAN METODE PROGRAM JAVA</h2>
-    <p>Setiap class memiliki tanggung jawab spesifik: <code>ProcurementRequest</code> menyimpan state dan aturan <code>nextStatusAfter()</code> yang menentukan status berikutnya berdasarkan nominal. <code>ApprovalService</code> mengelola penyimpanan in-memory dan panggilan ke workflow factory. <code>ApprovalController</code> menyediakan REST endpoints. Chain of Responsibility memastikan bahwa setiap handler hanya bertindak jika status sesuai, lalu dilanjutkan ke handler berikutnya bila ada.</p>
-    <p><strong>Method penting dalam sistem:</strong></p>
-    <ul>
-        <li><code>nextStatusAfter(ApprovalStatus current)</code> – logika aturan bisnis untuk menentukan status selanjutnya.</li>
-        <li><code>addHistory(String role, String remark)</code> – mencatat riwayat approval dengan timestamp.</li>
-        <li><code>createWorkflow()</code> – factory method yang merangkai handler.</li>
-        <li><code>approveRequest(String id, String role)</code> – memverifikasi status dan menjalankan workflow engine.</li>
-    </ul>
-
-    <!-- ==================== BAB 6 – USER TESTING ==================== -->
-    <h2>BAB 6 – USER TESTING & ITERASI</h2>
-    <h3>6.1 Metodologi Testing</h3>
-    <p>Pengujian dilakukan terhadap 3 responden (berbeda dari responden riset awal) dengan skenario: membuat pengajuan, approve sebagai Manager, melanjutkan sebagai Kepala Divisi/Direksi, serta melihat history approval.</p>
-    <h3>6.2 Hasil Testing & Feedback</h3>
-    <table>
-        <thead><tr><th>Responden</th><th>Skenario 1 (submit)</th><th>Skenario 2 (Manager approve)</th><th>Skenario 3 (lanjut role berikutnya)</th></tr></thead>
-        <tbody>
-            <tr><td>R1 (Siska)</td><td>✅ sukses</td><td>✅ sukses</td><td>⚠️ butuh tooltip</td></tr>
-            <tr><td>R2 (Bowo)</td><td>✅ sukses</td><td>✅ sukses</td><td>✅ sukses</td></tr>
-            <tr><td>R3 (Dewi)</td><td>✅ sukses</td><td>✅ sukses</td><td>✅ sukses</td></tr>
-        </tbody>
-    </table>
-    <p><strong>Tingkat keberhasilan tugas: 8 dari 9 (88.9%).</strong></p>
-    <h3>6.3 Iterasi Desain</h3>
-    <table>
-        <thead><tr><th>Iterasi</th><th>Sebelum</th><th>Sesudah</th><th>Dasar Feedback</th></tr></thead>
-        <tbody>
-            <tr><td>1</td><td>Tombol approve ukuran standar</td><td>Tombol approve diperjelas dengan ikon centang</td><td>R1: "Tombol approve kurang menonjol"</td></tr>
-            <tr><td>2</td><td>Status hanya teks</td><td>Menambahkan badge warna untuk setiap status</td><td>R2: "Status lebih jelas kalau ada warna"</td></tr>
-            <tr><td>3</td><td>Tidak ada informasi nominal maksimal</td><td>Menampilkan teks "Max 1 Milyar" pada form submit</td><td>R3: "Perlu batasan nominal"</td></tr>
-        </tbody>
-    </table>
-
-    <!-- ==================== BAB 7 – FULL SCRIPT PROGRAM JAVA ==================== -->
+    <!-- ==================== BAB 7 – FULL SCRIPT PROGRAM JAVA (DENGAN STRUKTUR FOLDER) ==================== -->
     <h2>BAB 7 – FULL SCRIPT PROGRAM JAVA</h2>
-    <p>Berikut adalah kode lengkap dari setiap class Java yang digunakan dalam sistem approval pengadaan berjenjang.</p>
+    <p>Berikut adalah struktur folder lengkap proyek dan kode dari setiap class Java yang digunakan dalam sistem approval pengadaan berjenjang.</p>
 
-    <h3>7.1 pom.xml</h3>
+   
+    <h3>7.1 pom.xml (Konfigurasi Maven)</h3>
     <div class="code-block">
+<span class="comment">&lt;!-- File konfigurasi Maven untuk mengelola dependensi dan build --&gt;</span>
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
          http://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
-    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
-    &lt;groupId&gt;com.example&lt;/groupId&gt;
-    &lt;artifactId&gt;procurement-approval-factory&lt;/artifactId&gt;
-    &lt;version&gt;1.0&lt;/version&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;              <span class="comment">&lt;!-- Model versi POM --&gt;</span>
+    &lt;groupId&gt;com.example&lt;/groupId&gt;                  <span class="comment">&lt;!-- Identitas grup/package --&gt;</span>
+    &lt;artifactId&gt;procurement-approval-factory&lt;/artifactId&gt; <span class="comment">&lt;!-- Nama artefak aplikasi --&gt;</span>
+    &lt;version&gt;1.0&lt;/version&gt;                         <span class="comment">&lt;!-- Versi aplikasi --&gt;</span>
+    
     &lt;parent&gt;
         &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
         &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
-        &lt;version&gt;2.7.0&lt;/version&gt;
+        &lt;version&gt;2.7.0&lt;/version&gt;                   <span class="comment">&lt;!-- Parent POM Spring Boot --&gt;</span>
     &lt;/parent&gt;
+    
     &lt;properties&gt;
-        &lt;java.version&gt;11&lt;/java.version&gt;
+        &lt;java.version&gt;11&lt;/java.version&gt;             <span class="comment">&lt;!-- Versi Java yang digunakan --&gt;</span>
     &lt;/properties&gt;
+    
     &lt;dependencies&gt;
         &lt;dependency&gt;
             &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-            &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+            &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt; <span class="comment">&lt;!-- Dependency untuk REST API &amp; web --&gt;</span>
         &lt;/dependency&gt;
     &lt;/dependencies&gt;
+    
     &lt;build&gt;
         &lt;plugins&gt;
             &lt;plugin&gt;
                 &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-                &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+                &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt; <span class="comment">&lt;!-- Plugin untuk membuat executable JAR --&gt;</span>
             &lt;/plugin&gt;
         &lt;/plugins&gt;
     &lt;/build&gt;
 &lt;/project&gt;
     </div>
 
-    <h3>7.2 ApprovalStatus.java</h3>
+    <h3>7.2 ApprovalStatus.java (Enum Status Approval)</h3>
     <div class="code-block">
+<span class="comment">// Package tempat class ini berada</span>
 package com.example.procurementfactory.model;
 
+<span class="comment">// Enum mendefinisikan status approval yang mungkin terjadi dalam workflow</span>
 public enum ApprovalStatus {
-    WAITING_MANAGER,
-    WAITING_DIVISION_HEAD,
-    WAITING_DIRECTOR,
-    APPROVED
+    WAITING_MANAGER,      <span class="comment">// Status: menunggu persetujuan Manager</span>
+    WAITING_DIVISION_HEAD,<span class="comment">// Status: menunggu persetujuan Kepala Divisi</span>
+    WAITING_DIRECTOR,     <span class="comment">// Status: menunggu persetujuan Direksi</span>
+    APPROVED              <span class="comment">// Status: sudah disetujui sepenuhnya</span>
 }
     </div>
 
-    <h3>7.3 ProcurementRequest.java</h3>
+    <h3>7.3 ProcurementRequest.java (Model/Entity Pengajuan)</h3>
     <div class="code-block">
 package com.example.procurementfactory.model;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.ArrayList;    <span class="comment">// Untuk membuat list riwayat</span>
+import java.util.Date;        <span class="comment">// Untuk mencatat timestamp approval</span>
+import java.util.List;        <span class="comment">// Untuk menyimpan daftar riwayat approval</span>
+import java.util.UUID;        <span class="comment">// Untuk menghasilkan ID unik (acak)</span>
 
+<span class="comment">// Kelas yang merepresentasikan satu pengajuan pengadaan</span>
 public class ProcurementRequest {
-    private String id;
-    private String description;
-    private double amount;
-    private ApprovalStatus status;
-    private List&lt;ApprovalHistoryEntry&gt; approvalHistory;
+    private String id;                    <span class="comment">// ID unik pengajuan (auto-generated)</span>
+    private String description;           <span class="comment">// Deskripsi barang/jasa yang diajukan</span>
+    private double amount;                <span class="comment">// Nilai pengadaan dalam Rupiah</span>
+    private ApprovalStatus status;        <span class="comment">// Status approval saat ini (enum)</span>
+    private List&lt;ApprovalHistoryEntry&gt; approvalHistory; <span class="comment">// Daftar riwayat approval</span>
 
+    <span class="comment">// Konstruktor: dipanggil saat membuat pengajuan baru</span>
     public ProcurementRequest(String description, double amount) {
-        this.id = UUID.randomUUID().toString().substring(0, 8);
+        this.id = UUID.randomUUID().toString().substring(0, 8); <span class="comment">// Generate ID 8 karakter unik</span>
         this.description = description;
         this.amount = amount;
-        this.status = ApprovalStatus.WAITING_MANAGER;
-        this.approvalHistory = new ArrayList&lt;&gt;();
+        this.status = ApprovalStatus.WAITING_MANAGER; <span class="comment">// Status awal: menunggu Manager</span>
+        this.approvalHistory = new ArrayList&lt;&gt;();    <span class="comment">// Inisialisasi list riwayat kosong</span>
     }
 
+    <span class="comment">// ========== GETTER & SETTER ==========</span>
     public String getId() { return id; }
     public String getDescription() { return description; }
     public double getAmount() { return amount; }
@@ -493,10 +453,12 @@ public class ProcurementRequest {
     public void setStatus(ApprovalStatus status) { this.status = status; }
     public List&lt;ApprovalHistoryEntry&gt; getApprovalHistory() { return approvalHistory; }
 
+    <span class="comment">// Method untuk menambahkan riwayat approval baru</span>
     public void addHistory(String role, String remark) {
         approvalHistory.add(new ApprovalHistoryEntry(role, remark, new Date()));
     }
 
+    <span class="comment">// LOGIKA INTI ATURAN BISNIS</span>
     public ApprovalStatus nextStatusAfter(ApprovalStatus current) {
         switch (current) {
             case WAITING_MANAGER:
@@ -512,15 +474,18 @@ public class ProcurementRequest {
         }
     }
 
+    <span class="comment">// Inner Class: Entri riwayat approval</span>
     public static class ApprovalHistoryEntry {
         private String role;
         private String remark;
         private Date timestamp;
+
         public ApprovalHistoryEntry(String role, String remark, Date timestamp) {
             this.role = role;
             this.remark = remark;
             this.timestamp = timestamp;
         }
+        
         public String getRole() { return role; }
         public String getRemark() { return remark; }
         public Date getTimestamp() { return timestamp; }
@@ -528,19 +493,20 @@ public class ProcurementRequest {
 }
     </div>
 
-    <h3>7.4 ApprovalHandler.java</h3>
+    <h3>7.4 ApprovalHandler.java (Interface Handler)</h3>
     <div class="code-block">
 package com.example.procurementfactory.handler;
 
 import com.example.procurementfactory.model.ProcurementRequest;
 
+<span class="comment">// Interface untuk Chain of Responsibility Pattern</span>
 public interface ApprovalHandler {
     void handle(ProcurementRequest request);
     void setNext(ApprovalHandler next);
 }
     </div>
 
-    <h3>7.5 ManagerHandler.java</h3>
+    <h3>7.5 ManagerHandler.java (Handler Level Manager)</h3>
     <div class="code-block">
 package com.example.procurementfactory.handler;
 
@@ -549,14 +515,18 @@ import com.example.procurementfactory.model.ApprovalStatus;
 
 public class ManagerHandler implements ApprovalHandler {
     private ApprovalHandler next;
+
     @Override
     public void setNext(ApprovalHandler next) { this.next = next; }
+
     @Override
     public void handle(ProcurementRequest request) {
         if (request.getStatus() == ApprovalStatus.WAITING_MANAGER) {
             request.addHistory("MANAGER", "Manager menyetujui (nominal: " + request.getAmount() + ")");
             request.setStatus(request.nextStatusAfter(ApprovalStatus.WAITING_MANAGER));
-        } else if (next != null) next.handle(request);
+        } else if (next != null) {
+            next.handle(request);
+        }
     }
 }
     </div>
@@ -570,14 +540,18 @@ import com.example.procurementfactory.model.ApprovalStatus;
 
 public class DivisionHeadHandler implements ApprovalHandler {
     private ApprovalHandler next;
+
     @Override
     public void setNext(ApprovalHandler next) { this.next = next; }
+
     @Override
     public void handle(ProcurementRequest request) {
         if (request.getStatus() == ApprovalStatus.WAITING_DIVISION_HEAD) {
             request.addHistory("DIVISION_HEAD", "Kepala Divisi menyetujui (nominal: " + request.getAmount() + ")");
             request.setStatus(request.nextStatusAfter(ApprovalStatus.WAITING_DIVISION_HEAD));
-        } else if (next != null) next.handle(request);
+        } else if (next != null) {
+            next.handle(request);
+        }
     }
 }
     </div>
@@ -591,19 +565,23 @@ import com.example.procurementfactory.model.ApprovalStatus;
 
 public class DirectorHandler implements ApprovalHandler {
     private ApprovalHandler next;
+
     @Override
     public void setNext(ApprovalHandler next) { this.next = next; }
+
     @Override
     public void handle(ProcurementRequest request) {
         if (request.getStatus() == ApprovalStatus.WAITING_DIRECTOR) {
             request.addHistory("DIRECTOR", "Direksi menyetujui (nominal: " + request.getAmount() + ")");
             request.setStatus(request.nextStatusAfter(ApprovalStatus.WAITING_DIRECTOR));
-        } else if (next != null) next.handle(request);
+        } else if (next != null) {
+            next.handle(request);
+        }
     }
 }
     </div>
 
-    <h3>7.8 ApprovalHandlerFactory.java</h3>
+    <h3>7.8 ApprovalHandlerFactory.java (Factory Pattern)</h3>
     <div class="code-block">
 package com.example.procurementfactory.handler;
 
@@ -619,7 +597,7 @@ public class ApprovalHandlerFactory {
 }
     </div>
 
-    <h3>7.9 ApprovalService.java</h3>
+    <h3>7.9 ApprovalService.java (Service Layer)</h3>
     <div class="code-block">
 package com.example.procurementfactory.service;
 
@@ -681,7 +659,7 @@ public class ApprovalService {
 }
     </div>
 
-    <h3>7.10 ApprovalController.java</h3>
+    <h3>7.10 ApprovalController.java (Controller/REST API)</h3>
     <div class="code-block">
 package com.example.procurementfactory.controller;
 
@@ -740,7 +718,7 @@ public class ApprovalController {
 }
     </div>
 
-    <h3>7.11 ProcurementApplication.java</h3>
+    <h3>7.11 ProcurementApplication.java (Main Class)</h3>
     <div class="code-block">
 package com.example.procurementfactory;
 
@@ -755,132 +733,41 @@ public class ProcurementApplication {
 }
     </div>
 
-    <!-- ==================== BAB 8 – DEPLOYMENT AWS EC2 ==================== -->
+    <!-- ==================== BAB 8 – DEPLOYMENT ==================== -->
     <h2>BAB 8 – DEPLOYMENT & OPERASI (AWS EC2)</h2>
-    <p>Aplikasi dijalankan pada instance AWS EC2 dengan langkah-langkah berikut:</p>
-
     <div class="deployment-step">
         <h3>8.1 Persiapan EC2 Instance</h3>
-        <ul>
-            <li>Buat instance EC2 (misal: <strong>t2.micro</strong>, Amazon Linux 2023 atau Ubuntu 22.04).</li>
-            <li>Pada <strong>Security Group</strong>, pastikan aturan Inbound mengizinkan:
-                <ul>
-                    <li>Port <strong>8081</strong> (untuk akses aplikasi Spring Boot)</li>
-                    <li>Port <strong>22</strong> (untuk SSH)</li>
-                </ul>
-            </li>
-            <li>Catat <strong>Public IP</strong> atau <strong>Public DNS</strong> instance.</li>
-        </ul>
+        <ul><li>Buat instance EC2 t2.micro, buka port 8081 dan 22 di Security Group.</li></ul>
+        <h3>8.2 Instal Java 11</h3>
+        <div class="code-block">sudo apt update && sudo apt install openjdk-11-jdk -y</div>
+        <h3>8.3 Menjalankan Aplikasi</h3>
+        <div class="code-block">nohup java -jar procurement-approval-factory-1.0.jar --server.port=8081 > app.log 2>&1 &amp;</div>
+        <h3>8.4 Akses</h3>
+        <div class="code-block">http://13.229.109.30:8081/</div>
     </div>
 
-    <div class="deployment-step">
-        <h3>8.2 Instal Java 11 di EC2</h3>
-        <p>SSH ke instance, lalu install Java 11:</p>
-        <div class="code-block">
-# Amazon Linux 2023 / RHEL
-sudo dnf install java-11-amazon-corretto-devel
-
-# Ubuntu
-sudo apt update
-sudo apt install openjdk-11-jdk -y
-
-# Verifikasi
-java -version   # output harus 11.x.x
-        </div>
-    </div>
-
-    <div class="deployment-step">
-        <h3>8.3 Instal Maven (Opsional – jika build di EC2)</h3>
-        <p>Jika ingin melakukan build langsung di EC2, install Maven:</p>
-        <div class="code-block">
-# Amazon Linux
-sudo dnf install maven
-
-# Upload semua source code ke EC2 (misal via scp atau git clone)
-# Di EC2, masuk ke direktori proyek lalu jalankan:
-mvn clean package
-
-# JAR akan berada di target/
-        </div>
-    </div>
-
-    <div class="deployment-step">
-        <h3>8.4 Menjalankan Aplikasi di EC2</h3>
-        <p>Di dalam EC2, dari direktori tempat file JAR berada:</p>
-        <div class="code-block">
-java -jar procurement-approval-factory-1.0.jar --server.port=8081
-        </div>
-        <p>Aplikasi akan berjalan di port <strong>8081</strong> secara default.</p>
-        <p>Untuk menjalankan di <strong>background</strong> (tidak berhenti saat SSH keluar), gunakan:</p>
-        <div class="code-block">
-nohup java -jar procurement-approval-factory-1.0.jar --server.port=8081 > app.log 2>&1 &amp;
-        </div>
-        <p>Atau menggunakan <code>disown</code>:</p>
-        <div class="code-block">
-java -jar procurement-approval-factory-1.0.jar --server.port=8081 &amp; disown
-        </div>
-    </div>
-
-    <div class="deployment-step">
-        <h3>8.5 Akses Halaman dari Browser</h3>
-        <p>Buka browser dan akses:</p>
-        <div class="code-block">
-http://13.229.109.30:8081/
-        </div>
-        <p>(Ganti dengan Public IP instance EC2 Anda)</p>
-    </div>
-
-    <!-- ==================== BAB 9 – KESIMPULAN ==================== -->
+    <!-- BAB 9 – KESIMPULAN -->
     <h2>BAB 9 – KESIMPULAN & REKOMENDASI</h2>
-    
-    <h3>9.1 Pengujian Alur</h3>
-    <table>
-        <thead><tr><th>Nominal Pengadaan</th><th>Tahapan</th><th>Status Akhir</th></tr></thead>
-        <tbody>
-            <tr><td>30.000.000</code></th><th>Manager approve</th><th>APPROVED</th>
-            <tr><td>150.000.000</td><td>Manager → Kepala Divisi approve</td><td>APPROVED</td>
-            <tr><td>800.000.000</td><td>Manager → Kepala Divisi → Direksi approve</td><td>APPROVED</td>
-        </tbody>
-    </table>
-    <p>Riwayat approval terekam dan dapat dilihat di tabel "Semua Pengajuan & Riwayat Approval".</p>
-
-    <h3>9.2 Kesimpulan</h3>
     <ul>
         <li>✅ Factory Pattern berhasil diimplementasikan untuk workflow approval berjenjang.</li>
-        <li>✅ Chain of Responsibility memungkinkan setiap level approval berjalan independen tanpa auto-lanjut.</li>
-        <li>✅ History approval (role + remark + timestamp) terekam lengkap dan dapat dilihat di tabel monitoring.</li>
-        <li>✅ Aplikasi telah dideploy di EC2 dan berjalan stabil dengan background process.</li>
-        <li>✅ Kode terstruktur, mudah dikembangkan, dan siap dijalankan di lingkungan production.</li>
+        <li>✅ Chain of Responsibility memungkinkan setiap level approval berjalan independen.</li>
+        <li>✅ History approval terekam lengkap.</li>
+        <li>✅ Aplikasi telah dideploy di EC2.</li>
     </ul>
 
-    <h3>9.3 Rekomendasi Prioritas (Backlog)</h3>
-    <table>
-        <thead><tr><th>Prioritas</th><th>Rekomendasi</th><th>Alasan</th></tr></thead>
-        <tbody>
-            <tr><td>P0 (Wajib)</td><td>Integrasi database permanen (PostgreSQL)</td><td>Mengganti Map in-memory agar data tidak hilang saat restart</td>
-            <tr><td>P1</td><td>Autentikasi pengguna (Spring Security)</td><td>Memastikan role sesuai dengan login</td>
-            <tr><td>P1</td><td>Notifikasi email setelah approval</td><td>Meningkatkan komunikasi antar level</td>
-            <tr><td>P2</td><td>Dashboard analitik dan export riwayat ke CSV/PDF</td><td>Membantu audit dan pelaporan</td>
-        </tbody>
-    </table>
-
-    <!-- ========== LINK DOWNLOAD SOURCE CODE ========== -->
-    <div style="background: #f4f9f4; border-left: 6px solid #2c6e2f; padding: 20px; margin: 40px 0 20px; border-radius: 12px; text-align: center;">
-        <h3 style="margin-top: 0;">📦 Download Source Code Lengkap</h3>
-        <p>Kode sumber (Java Spring Boot) beserta struktur proyek, static resources, dan konfigurasi Maven tersedia dalam folder Google Drive berikut.</p>
-        <a href="https://drive.google.com/drive/folders/1j-3eNsAkTfus6FRegJvningI0GZKpprh?usp=sharing" target="_blank" class="download-btn">⬇️ DOWNLOAD SOURCE CODE (ZIP / Folder)</a>
-        <p style="font-size: 10pt; margin-top: 15px;">*Folder berisi file <code>pom.xml</code>, folder <code>src/</code>, dan konfigurasi pendukung.</p>
+    <!-- DOWNLOAD -->
+    <div style="background: #f4f9f4; border-left: 6px solid #2c6e2f; padding: 20px; margin: 40px 0; border-radius: 12px; text-align: center;">
+        <h3>📦 Download Source Code Lengkap</h3>
+        <a href="https://drive.google.com/drive/folders/1j-3eNsAkTfus6FRegJvningI0GZKpprh?usp=sharing" target="_blank" class="download-btn">⬇️ DOWNLOAD SOURCE CODE</a>
     </div>
 
     <footer>
-        <p>© 2025 – Dimas Kurniawan (25120300016) | Universitas Cakrawala – Fakultas Ilmu Komputer</p>
-        <p>Laporan Tugas Akhir OOP06: Implementasi Factory Pattern & Chain of Responsibility untuk Workflow Persetujuan Pengadaan Barang/Jasa</p>
+        <p>© 2025 – Dimas Kurniawan (25120300016) | Universitas Cakrawala</p>
         <p>🔗 Flowchart: <a href="https://drive.google.com/file/d/1YkRU80UrFipWIcx_P5x_3q2P6B6RmcLs/view?usp=sharing" target="_blank">Lihat Flowchart</a> | 🌐 Live Demo: <a href="https://dimask016.github.io/oop06_uas/" target="_blank">GitHub Pages</a></p>
     </footer>
 </div>
 
 <script>
-    // Tab interaktif
     const tabBtns = document.querySelectorAll('.tab-button');
     const tabContents = document.querySelectorAll('.tab-content');
 
