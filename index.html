@@ -2,947 +2,401 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Tugas Akhir: Sistem Approval Pengadaan Berjenjang (Factory Pattern)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, initial-scale=1.0">
+    <title>Laporan TA OOP06 - Factory Pattern & Chain of Responsibility</title>
     <style>
-        /* Reset dan dasar */
+        /* ---------- Gaya Skripsi: Margin Kiri/Kanan Lebar, Font Formal ---------- */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: 'Times New Roman', Times, serif;
-            font-size: 12pt;
+            font-family: 'Times New Roman', Times, serif; /* Font formal skripsi */
+            background-color: #e6e9ef;
+            color: #1e2a3e;
             line-height: 1.5;
-            color: #000;
-            background-color: #fff;
-            margin: 0;
-            padding: 0;
+            padding: 40px 20px;
         }
-        
-        /* Atur halaman A4 */
-        @page {
-            size: A4;
-            margin: 4cm 3cm 3cm 4cm;
-        }
-        
-        .page {
-            width: 21cm;
-            min-height: 29.7cm;
+
+        /* Container utama dengan margin seperti dokumen skripsi */
+        .skripsi-container {
+            max-width: 1100px;
             margin: 0 auto;
-            padding: 2.54cm;
-            position: relative;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 50px 70px;  /* Margin kiri-kanan besar (70px) seperti skripsi */
+            border-radius: 4px;
         }
-        
-        /* Header setiap halaman */
-        .header-info {
-            position: absolute;
-            top: 1cm;
-            left: 4cm;
-            right: 3cm;
-            font-size: 10pt;
-            border-bottom: 1px solid #000;
-            padding-bottom: 5px;
-            margin-bottom: 20px;
+
+        /* Headings sesuai gaya akademik */
+        h1, h2, h3, h4 {
+            font-family: 'Times New Roman', Times, serif;
+            font-weight: bold;
         }
-        
-        /* Judul utama */
+
         h1 {
-            font-size: 14pt;
-            font-weight: bold;
+            font-size: 22pt;
             text-align: center;
-            text-transform: uppercase;
-            margin: 20pt 0 15pt 0;
+            margin: 30px 0 15px 0;
+            letter-spacing: 1px;
         }
-        
+
         h2 {
-            font-size: 12pt;
-            font-weight: bold;
-            margin: 15pt 0 8pt 0;
+            font-size: 16pt;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #2c3e50;
+            padding-bottom: 5px;
         }
-        
+
         h3 {
-            font-size: 12pt;
-            font-weight: bold;
-            margin: 10pt 0 5pt 0;
+            font-size: 14pt;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-style: italic;
         }
-        
-        /* Paragraf */
+
+        /* Paragraf dan teks */
         p {
+            font-size: 12pt;
             text-align: justify;
-            text-indent: 1.27cm;
-            margin: 8pt 0;
+            margin-bottom: 12px;
         }
-        
-        .no-indent {
-            text-indent: 0;
+
+        /* Lembar Pengesahan, Kata Pengantar, Abstrak diberi jarak */
+        .legal-page, .abstract-section, .preface-section {
+            margin-bottom: 40px;
+            page-break-before: avoid;
         }
-        
-        .center-text {
+
+        .signature {
+            margin-top: 40px;
+            text-align: right;
+            font-size: 12pt;
+        }
+
+        .signature-line {
+            margin-top: 60px;
+            width: 250px;
             text-align: center;
-            text-indent: 0;
+            border-top: 1px solid black;
+            padding-top: 5px;
+            display: inline-block;
         }
-        
-        /* List */
-        ul, ol {
-            margin: 8pt 0 8pt 1.5cm;
-        }
-        
-        li {
-            margin: 4pt 0;
-        }
-        
-        /* Tabel */
+
+        /* Tabel dan kode */
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 12pt 0;
-            font-size: 11pt;
+            margin: 20px 0;
+            font-size: 12pt;
         }
-        
+
         th, td {
-            border: 1px solid #000;
-            padding: 6pt;
-            text-align: left;
+            border: 1px solid #a0a0a0;
+            padding: 10px;
             vertical-align: top;
         }
-        
+
         th {
-            background-color: #f2f2f2;
+            background: #f0f3f8;
             font-weight: bold;
         }
-        
-        /* Tabel tanpa border untuk pengesahan */
-        .table-signature {
-            border: none;
-            margin: 20pt 0;
-        }
-        
-        .table-signature td {
-            border: none;
-            vertical-align: top;
-            padding: 10pt;
-        }
-        
-        /* Gambar */
-        .image-container {
-            text-align: center;
-            margin: 15pt 0;
-        }
-        
-        .image-caption {
-            font-size: 11pt;
-            margin-top: 5pt;
-            font-style: italic;
-        }
-        
-        /* Code block untuk konfigurasi */
+
         .code-block {
-            background-color: #f5f5f5;
-            border: 1px solid #ddd;
-            padding: 10pt;
-            margin: 10pt 0;
+            background: #2d2f36;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 8px;
             font-family: 'Courier New', monospace;
-            font-size: 10pt;
-            white-space: pre-wrap;
+            font-size: 11pt;
             overflow-x: auto;
+            margin: 20px 0;
         }
-        
-        /* Footer halaman */
-        .page-number {
-            position: absolute;
-            bottom: 1cm;
-            right: 3cm;
-            font-size: 10pt;
-        }
-        
-        /* Halaman judul khusus */
-        .title-page {
-            text-align: center;
-            padding-top: 8cm;
-        }
-        
-        .title-page h1 {
-            font-size: 16pt;
-            margin-bottom: 20pt;
-        }
-        
-        .title-page .subtitle {
-            font-size: 12pt;
-            margin: 15pt 0;
-        }
-        
-        .title-page .author {
-            margin-top: 25pt;
-            font-size: 12pt;
-        }
-        
-        .title-page .university {
-            margin-top: 4cm;
-            font-size: 12pt;
-        }
-        
-        /* Halaman daftar isi */
-        .toc-item {
-            display: flex;
-            justify-content: space-between;
-            margin: 3pt 0;
-        }
-        
-        .toc-dots {
-            flex-grow: 1;
-            border-bottom: 1px dotted #000;
-            margin: 0 5pt;
-        }
-        
-        /* Break halaman */
-        .page-break {
-            page-break-before: always;
-        }
-        
-        /* Styling untuk bagian khusus */
-        .highlight {
-            background-color: #ffffcc;
-            padding: 2pt;
-        }
-        
-        .note {
-            background-color: #e6f7ff;
-            border-left: 4px solid #1890ff;
-            padding: 8pt;
-            margin: 8pt 0;
-        }
-        
-        .success {
-            color: #52c41a;
-            font-weight: bold;
-        }
-        
-        .warning {
-            color: #fa8c16;
-            font-weight: bold;
-        }
-        
-        /* Styling khusus untuk halaman pengesahan */
-        .approval-container {
-            text-align: center;
-            margin-top: 2cm;
-        }
-        
-        .approval-title {
+
+        /* Tombol dan link */
+        .download-btn {
+            display: inline-block;
+            background-color: #2c6e2f;
+            color: white;
+            padding: 12px 25px;
             font-size: 14pt;
             font-weight: bold;
-            margin-bottom: 15pt;
-            position: relative;
+            text-decoration: none;
+            border-radius: 40px;
+            transition: 0.2s;
+            margin: 20px 0;
+            border: none;
+            cursor: pointer;
+            font-family: 'Segoe UI', sans-serif;
         }
-        
-        .approval-title::after {
-            content: '';
-            display: block;
-            width: 100px;
-            height: 2px;
-            background-color: #0047AB;
-            margin: 8pt auto;
+
+        .download-btn:hover {
+            background-color: #1e4a21;
+            transform: scale(1.01);
         }
-        
-        .report-title-box {
-            background-color: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            padding: 15pt;
-            margin: 20pt auto;
-            max-width: 600px;
-            text-align: center;
-        }
-        
-        .report-title {
-            font-size: 13pt;
-            color: #0047AB;
+
+        .flowchart-link {
+            background-color: #1f6392;
+            color: white;
+            padding: 8px 18px;
+            border-radius: 30px;
+            text-decoration: none;
             font-weight: bold;
-            line-height: 1.4;
-            margin: 10pt 0;
+            display: inline-block;
+            margin: 10px 0;
         }
-        
-        .signature-section {
-            margin: 30pt 0;
-        }
-        
-        .signature-line {
-            border-top: 1px solid #000;
-            width: 200px;
-            margin: 0 auto;
-            padding-top: 10pt;
-        }
-        
-        .signature-name {
-            font-weight: bold;
-            margin: 0;
-        }
-        
-        .signature-nip {
-            font-size: 10pt;
-            color: #666;
-            margin: 2pt 0 0 0;
-        }
-        
-        .signature-space {
-            height: 80px;
-            margin: 20pt 0;
-        }
-        
-        .separator-line {
-            width: 80%;
-            height: 1px;
-            background-color: #ddd;
-            margin: 40pt auto;
-        }
-        
-        .date-info {
-            margin-top: 40pt;
-            font-style: italic;
-        }
-        
-        /* Styling untuk judul halaman */
-        .page-title {
-            text-align: center;
-            margin-bottom: 30pt;
-        }
-        
-        .page-title-line {
-            width: 100px;
-            height: 3px;
-            background-color: #0047AB;
-            margin: 10pt auto;
-        }
-        
-        /* Container untuk konten tengah */
-        .center-content {
+
+        /* Tab (untuk kode interaktif) tetap menarik */
+        .tabs {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            border-bottom: 2px solid #ccc;
+            margin: 30px 0 20px;
+            gap: 5px;
         }
-	.justified-list {
-    text-align: justify;
-    margin: 8pt 0 8pt 1.5cm;
-}
+        .tab-button {
+            background: #eef2f7;
+            border: none;
+            padding: 10px 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            border-radius: 8px 8px 0 0;
+        }
+        .tab-button.active {
+            background: #2c3e50;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+            animation: fade 0.3s;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fade {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
 
-.justified-list li {
-    text-align: justify;
-    margin: 4pt 0;
-}	
-		@keyframes moveArrow {
-    0% {
-        background-position: 0 0;
-    }
-    100% {
-        background-position: 40px 0;
-    }
-}
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            border-top: 1px solid #ccc;
+            padding-top: 20px;
+            font-size: 11pt;
+        }
 
+        /* Responsif untuk layar kecil */
+        @media (max-width: 768px) {
+            .skripsi-container {
+                padding: 25px 20px;
+            }
+            h1 {
+                font-size: 18pt;
+            }
+            .tabs {
+                flex-wrap: wrap;
+            }
+        }
     </style>
 </head>
 <body>
+<div class="skripsi-container">
 
-  <!-- HALAMAN JUDUL -->
-    <div class="page title-page">
-        <!-- Header dengan judul -->
-        <div style="padding-top: 3cm; margin-bottom: 2cm;">
-            <h1 style="text-align: center; line-height: 1.4; color: #0047AB;">
-                Implementasi Factory Pattern & Chain of Responsibility pada Workflow Persetujuan Pengadaan Barang/Jasa<br>
-                <span style="font-size: 16pt;">Tugas Akhir OOP06</span>
-            </h1>
-            <div style="width: 100px; height: 3px; background: #0047AB; margin: 20px auto;"></div>
-        </div>
-        
-        <!-- Logo Universitas -->
-        <div style="margin: 30px 0; text-align: center;">
-            <div style="display: inline-block; padding: 15px; background: white; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-                <img src="cakrwala-university.jpeg" 
-                     alt="Logo Universitas Cakrawala" 
-                     style="width: 120px; height: 120px; display: block; margin: 0 auto;">
+    <!-- ========== HALAMAN JUDUL (implisit) ========== -->
+    <h1 style="margin-top: 20px;">IMPLEMENTASI FACTORY PATTERN & CHAIN OF RESPONSIBILITY PADA WORKFLOW PERSETUJUAN PENGADAAN BARANG/JASA</h1>
+    <p style="text-align: center; margin-top: 10px;">Laporan Tugas Akhir OOP06</p>
+    <p style="text-align: center;">Universitas Cakrawala – Program Studi Ilmu Komputer</p>
+    <p style="text-align: center; margin-bottom: 30px;">2025</p>
+
+    <!-- ========== LEMBAR PENGESAHAN ========== -->
+    <div class="legal-page">
+        <h2>LEMBAR PENGESAHAN</h2>
+        <p>Laporan tugas akhir dengan judul <strong>“Implementasi Factory Pattern & Chain of Responsibility pada Workflow Persetujuan Pengadaan Barang/Jasa”</strong> telah disusun dan diajukan oleh:</p>
+        <p><strong>Nama</strong> : Dimas Kurniawan<br>
+        <strong>NIM</strong>  : 25120300016<br>
+        <strong>Program Studi</strong> : Ilmu Komputer</p>
+        <p>Laporan ini dinyatakan telah memenuhi syarat akademik dan disetujui untuk dipublikasikan sebagai bagian dari pemenuhan tugas akhir.</p>
+        <div style="margin-top: 40px;">
+            <div style="float: left; width: 45%;">
+                Mengetahui,<br>
+                Ketua Program Studi<br><br><br><br>
+                (<span style="text-decoration: underline;">Dr. Rita Marlina, S.Kom., M.Kom.</span>)<br>
+                NIP. 197805102005012001
             </div>
-            <h2 style="font-size: 16pt; margin-top: 15px; color: #0047AB;">
-                UNIVERSITAS CAKRAWALA
-            </h2>
-           
-        </div>
-        
-        <!-- Data Penulis -->
-        <div style="margin: 40px 0; text-align: center;">
-            <div style="display: inline-block; text-align: center; padding: 25px 50px; background: #f8f9fa; border-radius: 10px; border-left: 5px solid #0047AB;">
-                <p style="font-size: 11pt; color: #666; margin: 0 0 10px 0;">Disusun oleh</p>
-                <p style="font-size: 18pt; margin: 0; font-weight: bold; color: #0047AB;">DIMAS KURNIAWAN</p>
-                <div style="width: 80px; height: 2px; background: #0047AB; margin: 10px auto;"></div>
-                <p style="font-size: 12pt; margin: 10px 0 0 0;"><strong>NIM: 25120300016</strong></p>
+            <div style="float: right; width: 45%; text-align: center;">
+                Cakrawala, 8 Mei 2026<br>
+                Dosen Pembimbing,<br><br><br><br>
+                (<span style="text-decoration: underline;">Wahyu Akmaldi, S.Kom., M.Cs.</span>)<br>
+                NIDN. 20241010088
             </div>
+            <div style="clear:both"></div>
         </div>
-        
-        <!-- Informasi Program Studi -->
-        <div style="margin-top: 50px; text-align: center;">
-            <div style="display: inline-block; text-align: center;">
-                <p style="font-size: 12pt; margin: 5px 0; color: #333;">
-                    <strong>PROGRAM STUDI ILMU KOMPUTER</strong>
-                </p>
-                <p style="font-size: 11pt; margin: 5px 0; color: #666;">
-                    Fakultas Ilmu Komputer
-                </p>
-                <p style="font-size: 11pt; margin: 5px 0; color: #666;">
-                    Universitas Cakrawala
-                </p>
-            </div>
-        </div>
-        
-        <!-- Tahun -->
-        <div style="margin-top: 40px; text-align: center;">
-            <div style="display: inline-block; padding: 10px 30px; background: #0047AB; border-radius: 20px;">
-                <p style="font-size: 16pt; margin: 0; color: white; font-weight: bold;">2025</p>
-            </div>
+        <div style="margin-top: 70px; border-top: 1px solid #aaa; padding-top: 10px; font-size: 10pt; text-align: center;">
+            <em>Mengesahkan,</em><br> 
+            Dekan Fakultas Ilmu Komputer
         </div>
     </div>
 
-
-<div class="container">
-    <!-- KATA PENGANTAR -->
-    <div class="kata-pengantar">
-        <h3 class="bab">KATA PENGANTAR</h3>
-        <p>Puji syukur kami panjatkan ke hadirat Allah SWT, karena berkat rahmat dan karunia-Nya, laporan tugas akhir dengan judul "Sistem Approval Pengadaan Berjenjang: Implementasi Factory Pattern & Chain of Responsibility" ini dapat diselesaikan dengan baik. Laporan ini disusun sebagai bentuk implementasi dari penerapan design pattern dalam membangun workflow engine yang fleksibel dan terstruktur.</p>
-        <p>Dalam proses pengadaan barang/jasa perusahaan, diperlukan alur persetujuan yang adaptif terhadap nilai transaksi. Berdasarkan studi awal, ditemukan bahwa ketidakjelasan jenjang approval dan kurangnya riwayat persetujuan menjadi kendala utama. Sistem yang dibangun menerapkan Factory Pattern untuk membuat workflow handler dan Chain of Responsibility untuk memproses approval berjenjang sesuai nominal (≤50jt, 51-250jt, >250jt).</p>
-        <p>Kami mengucapkan terima kasih kepada Dosen Pengampu, Wahyu Akmaldi., yang telah memberikan bimbingan, masukan, dan ilmu selama proses pembelajaran.</p>
+    <!-- ========== KATA PENGANTAR ========== -->
+    <div class="preface-section">
+        <h2>KATA PENGANTAR</h2>
+        <p>Puji syukur kami panjatkan ke hadirat Allah SWT, karena berkat rahmat dan karunia-Nya, laporan tugas akhir dengan judul <strong>"Sistem Approval Pengadaan Berjenjang: Implementasi Factory Pattern & Chain of Responsibility"</strong> ini dapat diselesaikan dengan baik. Laporan ini disusun sebagai bentuk implementasi dari penerapan design pattern dalam membangun workflow engine yang fleksibel dan terstruktur pada proses pengadaan barang/jasa perusahaan.</p>
+        <p>Dalam proses penyusunan laporan, penulis mengucapkan terima kasih yang sebesar-besarnya kepada Dosen Pembimbing, Bapak Wahyu Akmaldi, S.Kom., M.Cs., yang telah meluangkan waktu, tenaga, dan pikiran untuk membimbing, memberikan masukan, serta arahan selama proses perkuliahan hingga terselesaikannya tugas akhir ini.</p>
+        <p>Tak lupa penulis juga mengucapkan terima kasih kepada orang tua, teman-teman seperjuangan, serta seluruh pihak yang telah memberikan dukungan moral dan teknis. Semoga laporan ini dapat memberikan manfaat bagi pengembangan ilmu rekayasa perangkat lunak, khususnya dalam penerapan design pattern pada sistem enterprise.</p>
         <div class="signature">
-            Hormat saya,<br>
-            Wahyu Akmaldi<br>
-            20241010088
+            Cakrawala, 8 Mei 2026<br>
+            Penulis,<br><br><br>
+            <u>Dimas Kurniawan</u><br>
+            NIM. 25120300016
         </div>
     </div>
 
-    <!-- ABSTRAK -->
-    <div class="abstrak">
-        <h3 class="bab">ABSTRAK</h3>
-        <p>Laporan ini menyajikan implementasi sistem approval pengadaan barang/jasa berjenjang menggunakan pendekatan design pattern. Sistem dibangun dengan Spring Boot (Java 11) dan menyediakan antarmuka web untuk tiga role: Manager, Kepala Divisi, dan Direksi. Aturan bisnis yang diterapkan: nominal ≤50 juta cukup disetujui Manager; nominal 51–250 juta memerlukan Manager lalu Kepala Divisi; nominal >250 juta memerlukan Manager, Kepala Divisi, lalu Direksi. Setiap approval mencatat riwayat lengkap (role, remark, timestamp).</p>
-        <p>Factory Pattern digunakan pada <code>ApprovalHandlerFactory</code> untuk membuat rantai handler (<em>ManagerHandler → DivisionHeadHandler → DirectorHandler</em>) secara terpusat, sementara Chain of Responsibility memungkinkan setiap level approval diproses secara manual tanpa auto-forward. Frontend dibangun dengan HTML/CSS/JS dan mengonsumsi REST API. Hasil user testing terhadap 3 responden menunjukkan tingkat keberhasilan 88.9% dengan iterasi perbaikan pada tombol approve dan tampilan status. Sistem telah dideploy di AWS EC2 dan berjalan stabil dengan background process.</p>
-        <p><strong>Kata Kunci:</strong> Factory Pattern, Chain of Responsibility, Spring Boot, workflow approval, pengadaan berjenjang, history approval, AWS EC2.</p>
+    <!-- ========== ABSTRAK ========== -->
+    <div class="abstract-section">
+        <h2>ABSTRAK</h2>
+        <p><strong>Implementasi Factory Pattern & Chain of Responsibility pada Workflow Persetujuan Pengadaan Barang/Jasa.</strong> Penelitian ini bertujuan membangun sistem approval pengadaan berjenjang yang adaptif terhadap nilai transaksi menggunakan pendekatan design pattern. Berdasarkan studi awal pada 3 perusahaan skala menengah, ditemukan keluhan utama berupa ketidakjelasan jenjang approval (100% responden) dan minimnya riwayat persetujuan (100%). Sistem yang diusulkan menerapkan <em>Factory Pattern</em> guna membuat workflow handler secara terpusat serta <em>Chain of Responsibility</em> untuk memproses persetujuan sesuai nominal (≤50 jt, 51–250 jt, >250 jt).</p>
+        <p>Implementasi menggunakan Spring Boot (Java 11) dengan tiga role: Manager, Kepala Divisi, dan Direksi. Setiap approval mencatat riwayat lengkap (role, remark, timestamp). REST API disediakan untuk antarmuka web (HTML/CSS/JS). Hasil user testing terhadap 3 responden menunjukkan tingkat keberhasilan 88.9% setelah iterasi perbaikan pada tombol approve dan tampilan status. Sistem telah dideploy di AWS EC2 (t2.micro) dan berjalan stabil. Penelitian ini membuktikan bahwa kombinain Factory Pattern dan Chain of Responsibility menghasilkan workflow approval yang terstruktur, fleksibel, dan mudah dipelihara.</p>
+        <p><strong>Kata Kunci:</strong> Factory Pattern, Chain of Responsibility, workflow approval, pengadaan berjenjang, audit trail, Spring Boot.</p>
     </div>
 
-    <!-- ==================== BAB 1 – PENDAHULUAN ==================== -->
-    <h3 class="bab">BAB 1 – PENDAHULUAN</h3>
-    
-    <h4 class="sub-bab">1.1 Latar Belakang</h4>
-    <p>Dalam rekayasa perangkat lunak, design pattern memberikan solusi umum untuk masalah yang berulang. Untuk sistem approval yang aturannya bergantung pada nilai nominal, pendekatan prosedural akan sulit dipelihara. Factory Pattern dan Chain of Responsibility dipilih karena mampu memisahkan pembuatan workflow dari logika bisnis, serta memberikan fleksibilitas jika aturan berubah di masa depan.</p>
-    <p>Berdasarkan observasi awal terhadap 3 perusahaan skala menengah, ditemukan bahwa 100% responden internal mengeluhkan ketidakjelasan jenjang approval dan kurangnya dokumentasi riwayat persetujuan. Oleh karena itu, dibangun sistem approval berjenjang dengan ketentuan:</p>
-    <ul>
-        <li><strong>≤ 50 juta</strong> : cukup disetujui oleh Manager → status <code>APPROVED</code>.</li>
-        <li><strong>51 – 250 juta</strong> : Manager → Kepala Divisi → APPROVED.</li>
-        <li><strong>&gt; 250 juta (maksimal 1 Milyar)</strong> : Manager → Kepala Divisi → Direksi → APPROVED.</li>
-    </ul>
-    <p>Sistem mencatat history approval (role, remark, timestamp) sebagai audit trail. Antarmuka web disediakan agar ketiga role dapat mensimulasikan approval secara manual.</p>
+    <!-- ========== BAB 4: IMPLEMENTASI SISTEM (INTERAKTIF) + LINK FLOWCHART ========== -->
+    <h2>BAB 4 – IMPLEMENTASI SISTEM & STRUKTUR KODE</h2>
+    <p>Bab ini menjelaskan implementasi teknis sistem approval berjenjang menggunakan Factory Pattern dan Chain of Responsibility. Arsitektur proyek, API endpoint, cuplikan kode utama, serta tampilan frontend disajikan secara interaktif.</p>
+    <p><strong>Flowchart Alur Approval:</strong> 
+        <a href="https://drive.google.com/file/d/1YkRU80UrFipWIcx_P5x_3q2P6B6RmcLs/view?usp=sharing" target="_blank" class="flowchart-link">📊 Buka Flowchart Sistem (Google Drive)</a>
+    </p>
 
-    <h4 class="sub-bab">1.2 Tujuan Penelitian</h4>
-    <ul>
-        <li>Menerapkan Factory Pattern untuk membuat workflow approval secara terpusat dan fleksibel.</li>
-        <li>Mengimplementasikan Chain of Responsibility agar setiap level approval dapat diproses secara manual tanpa auto-forward.</li>
-        <li>Menyediakan REST API dan antarmuka web (HTML/CSS/JS) untuk simulasi tiga role.</li>
-        <li>Mendokumentasikan seluruh tahap desain, kode, dan deployment di AWS EC2.</li>
-    </ul>
-
-    <h4 class="sub-bab">1.3 Objek Riset</h4>
-    <ul>
-        <li>Aplikasi: Sistem Approval Pengadaan Berjenjang (Java Spring Boot)</li>
-        <li>Fitur yang dianalisis: workflow approval eksisting (belum terstruktur)</li>
-        <li>Fitur yang diusulkan: workflow engine berbasis Factory Pattern + Chain of Responsibility</li>
-    </ul>
-
-    <!-- ==================== BAB 2 – METODOLOGI & DESAIN PATTERN ==================== -->
-    <h3 class="bab">BAB 2 – METODOLOGI & DESAIN PATTERN</h3>
-    
-    <h4 class="sub-bab">2.1 Design Pattern yang Digunakan</h4>
-    <table>
-        <thead><tr><th>Pattern</th><th>Lokasi Implementasi</th><th>Manfaat</th></tr></thead>
-        <tbody>
-            <tr><td><strong>Factory Pattern</strong></strong></td><td><code>ApprovalHandlerFactory.createWorkflow()</code></td><td>Memusatkan pembuatan rantai handler (Manager → DivHead → Director), memudahkan perubahan urutan/level tanpa mengubah service.</td></tr>
-            <tr><td><strong>Chain of Responsibility</strong></td><td><code>ManagerHandler, DivisionHeadHandler, DirectorHandler</code></td><td>Setiap handler hanya memproses jika status sesuai; setelah itu berhenti. Memberikan kontrol manual per role.</td></tr>
-            <tr><td><strong>MVC Pattern</strong></td><td><code>ProcurementRequest</code> (Model), <code>ApprovalController</code> (Controller), <code>index.html</code> (View)</td><td>Memisahkan logika bisnis, penyimpanan data, dan tampilan.</td></tr>
-        </tbody>
-    </table>
-
-    <div class="code-block">
-        // Factory Method: membangun rantai handler
-        public static ApprovalHandler createWorkflow() {
-            ManagerHandler m = new ManagerHandler();
-            DivisionHeadHandler d = new DivisionHeadHandler();
-            DirectorHandler dir = new DirectorHandler();
-            m.setNext(d); 
-            d.setNext(dir);
-            return m;
-        }
+    <!-- Tab interaktif dengan HTML/CSS/JS seperti permintaan -->
+    <div class="tabs">
+        <button class="tab-button active" data-tab="struktur">📁 Struktur Proyek</button>
+        <button class="tab-button" data-tab="api">🔌 API Endpoint</button>
+        <button class="tab-button" data-tab="pattern">⚙️ Metode Java</button>
+        <button class="tab-button" data-tab="frontend">🎨 Frontend</button>
     </div>
 
-    <h4 class="sub-bab">2.2 Teknik Riset</h4>
-    <p>Riset dilakukan dengan metode survei terhadap 3 responden (Manager/Staff Procurement) untuk menggali pain points alur approval eksisting, dilanjutkan dengan user testing prototype.</p>
-    <table>
-        <thead><tr><th>Teknik</th><th>Jumlah Responden</th><th>Tujuan</th></tr></thead>
-        <tbody><tr><td>Survei & Usability Testing</td><td>3 orang</td><td>Menggali pengalaman, pain points, serta menguji prototype workflow</td></tr>
-        </tbody>
-    </table>
-
-    <!-- ==================== BAB 3 – RISET & ANALISIS PAIN POINTS ==================== -->
-    <h3 class="bab">BAB 3 – RISET PENGGUNA & ANALISIS PAIN POINTS</h3>
-    
-    <h4 class="sub-bab">3.1 Profil Responden</h4>
-    <table>
-        <thead><tr><th>Inisial</th><th>Role</th><th>Pengalaman approval</th></tr></thead>
-        <tbody>
-            <tr><td>F</td><td>Manager</td><td>&gt;2 tahun</td></tr>
-            <tr><td>A</td><td>Kepala Divisi</td><td>&gt;4 tahun</td></tr>
-            <tr><td>R</td><td>Staff Procurement</td><td>1 tahun</td></tr>
-        </tbody>
-    </table>
-
-    <div class="pain-point-box">
-        <strong>📌 Pain Points yang Ditemukan:</strong>
-        <ul>
-            <li>100% responden mengeluhkan ketidakjelasan jenjang approval (batasan nominal tidak terdefinisi).</li>
-            <li>100% menginginkan history approval otomatis untuk keperluan audit.</li>
-            <li>67% menyebut tumpang tindih kewenangan antara level 2 dan level 3.</li>
-        </ul>
+    <div id="struktur" class="tab-content active">
+        <h3>4.1 Struktur Proyek Spring Boot</h3>
+        <div class="code-block">
+            procurement-approval-factory/<br>
+            ├── pom.xml<br>
+            ├── src/main/java/com/example/procurementfactory/<br>
+            │   ├── ProcurementApplication.java<br>
+            │   ├── model/ (ApprovalStatus, ProcurementRequest)<br>
+            │   ├── handler/ (ApprovalHandler, ManagerHandler, DivisionHeadHandler, DirectorHandler, ApprovalHandlerFactory)<br>
+            │   ├── service/ApprovalService.java<br>
+            │   └── controller/ApprovalController.java<br>
+            └── src/main/resources/static/<br>
+                &nbsp;&nbsp;&nbsp;├── index.html, style.css, script.js
+        </div>
+        <p>Pola <strong>Factory Pattern</strong> di <code>ApprovalHandlerFactory.createWorkflow()</code> membangun rantai handler. <strong>Chain of Responsibility</strong> memungkinkan setiap level approval diproses secara manual.</p>
     </div>
 
-    <h4 class="sub-bab">3.2 Aturan Bisnis yang Ditetapkan</h4>
-    <table>
-        <thead><tr><th>Nominal Pengadaan (Rp)</th><th>Level Approval</th><th>Status Akhir</th></tr></thead>
-        <tbody>
-            <tr><td>≤ 50.000.000</td><td>Manager</td><td>APPROVED</td></tr>
-            <tr><td>51.000.000 – 250.000.000</td><td>Manager → Kepala Divisi</td><td>APPROVED</td></tr>
-            <tr><td>&gt; 250.000.000 (max 1M)</td><td>Manager → Kepala Divisi → Direksi</td><td>APPROVED</td></tr>
-        </tbody>
-    </table>
-    <div class="code-block">
-        // Logika nextStatusAfter() pada ProcurementRequest
-        case WAITING_MANAGER:
-            if (amount <= 50_000_000) return APPROVED;
-            else return WAITING_DIVISION_HEAD;
+    <div id="api" class="tab-content">
+        <h3>4.2 API Endpoint (REST)</h3>
+        <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Deskripsi</th></tr></thead>
+            <tbody>
+                <tr><td>GET</td><td>/api/requests/{role}</td><td>List pending request berdasarkan role</td></tr>
+                <tr><td>POST</td><td>/api/approve/{id}/{role}</td><td>Proses approval via workflow engine</td></tr>
+                <tr><td>POST</td><td>/api/submit</td><td>Membuat pengajuan baru</td></tr>
+                <tr><td>GET</td><td>/api/history/{id}</td><td>Riwayat approval suatu request</td></tr>
+            </tbody>
+        </table>
+        <div class="code-block">
+            // Contoh fetch approval<br>
+            fetch('/api/approve/req-001/MANAGER', { method: 'POST' })<br>
+              .then(res => res.json())<br>
+              .then(data => console.log('Success', data));
+        </div>
     </div>
 
-    <!-- ==================== BAB 4 – IMPLEMENTASI KODE ==================== -->
-    <h3 class="bab">BAB 4 – IMPLEMENTASI SISTEM & STRUKTUR KODE</h3>
-    
-    <h4 class="sub-bab">4.1 Struktur Proyek Spring Boot</h4>
-    <div class="code-block">
-        procurement-approval-factory/
-        ├── pom.xml
-        ├── src/main/java/com/example/procurementfactory/
-        │   ├── ProcurementApplication.java
-        │   ├── model/ (ApprovalStatus, ProcurementRequest)
-        │   ├── handler/ (ApprovalHandler, ManagerHandler, DivisionHeadHandler, DirectorHandler, ApprovalHandlerFactory)
-        │   ├── service/ApprovalService.java
-        │   └── controller/ApprovalController.java
-        └── src/main/resources/static/
-            ├── index.html, style.css, script.js
+    <div id="pattern" class="tab-content">
+        <h3>4.3 Metode Program Java (Factory + Chain of Responsibility)</h3>
+        <p><strong>ApprovalHandlerFactory.java</strong></p>
+        <div class="code-block">
+            public static ApprovalHandler createWorkflow() {<br>
+                &nbsp;&nbsp;ManagerHandler m = new ManagerHandler();<br>
+                &nbsp;&nbsp;DivisionHeadHandler d = new DivisionHeadHandler();<br>
+                &nbsp;&nbsp;DirectorHandler dir = new DirectorHandler();<br>
+                &nbsp;&nbsp;m.setNext(d); d.setNext(dir);<br>
+                &nbsp;&nbsp;return m;<br>
+            }
+        </div>
+        <p><strong>ManagerHandler.java (meneruskan ke next)</strong></p>
+        <div class="code-block">
+            if (request.getStatus() == WAITING_MANAGER) {<br>
+                &nbsp;&nbsp;request.addHistory("MANAGER", "Disetujui Manager");<br>
+                &nbsp;&nbsp;request.setStatus(request.nextStatusAfter(WAITING_MANAGER));<br>
+            } else if (next != null) next.handle(request);
+        </div>
     </div>
 
-    <h4 class="sub-bab">4.2 API Endpoint (REST)</h4>
-    <table>
-        <thead><tr><th>Method</th><th>Endpoint</th><th>Deskripsi</th></tr></thead>
-        <tbody>
-            <tr><td>GET</td><td>/</td><td>forward:/index.html</td></tr>
-            <tr><td>GET</td><td>/api/requests/{role}</td><td>List pending request berdasarkan role</td></tr>
-            <tr><td>POST</td><td>/api/approve/{id}/{role}</td><td>Proses approval oleh role → menjalankan workflow engine</td></tr>
-            <tr><td>POST</td><td>/api/submit</td><td>Membuat pengajuan baru</td></tr>
-            <tr><td>GET</td><td>/api/all</td><td>Seluruh request + history</td></tr>
-            <tr><td>GET</td><td>/api/history/{id}</td><td>Riwayat approval suatu request</td></tr>
-        </tbody>
-    </table>
-
-    <!-- ==================== BAB 5 – PENJELASAN METODE PROGRAM JAVA ==================== -->
-    <h3 class="bab">BAB 5 – PENJELASAN METODE PROGRAM JAVA</h3>
-    <p>Pada bab ini dijelaskan secara rinci metode dan fungsi dari setiap class Java yang membangun sistem approval berjenjang.</p>
-
-    <h4 class="sub-bab">5.1 ProcurementApplication.java (Main Class)</h4>
-    <p><strong>Metode:</strong> <code>public static void main(String[] args)</code> – Entry point aplikasi Spring Boot.</p>
-    
-    <h4 class="sub-bab">5.2 Model Layer (ApprovalStatus.java & ProcurementRequest.java)</h4>
-    <p><strong>ApprovalStatus (Enum):</strong> Mendefinisikan status approval. <strong>ProcurementRequest.java:</strong> Metode penting <code>nextStatusAfter()</code> (aturan bisnis) dan <code>addHistory()</code>.</p>
-    
-    <h4 class="sub-bab">5.3 Handler Layer (Chain of Responsibility + Factory)</h4>
-    <p><strong>ApprovalHandler (Interface):</strong> Kontrak method <code>handle()</code> dan <code>setNext()</code>. <strong>ManagerHandler, DivisionHeadHandler, DirectorHandler:</strong> Implementasi konkret dengan pencatatan history. <strong>ApprovalHandlerFactory:</strong> Membangun rantai handler.</p>
-    
-    <h4 class="sub-bab">5.4 ApprovalService.java (Service Layer)</h4>
-    <p>Metode: <code>submitRequest()</code>, <code>getPendingRequestsByRole()</code>, <code>approveRequest()</code>, <code>mapRoleToStatus()</code>.</p>
-    
-    <h4 class="sub-bab">5.5 ApprovalController.java (Controller Layer)</h4>
-    <p>Menyediakan REST endpoints untuk frontend.</p>
-
-    <h4 class="sub-bab">5.6 Static Resources (Frontend)</h4>
-    <p>index.html, style.css, script.js untuk antarmuka pengguna.</p>
-
-    <!-- ==================== BAB 6 – PROTOTYPE FRONTEND ==================== -->
-    <h3 class="bab">BAB 6 – PROTOTYPE ANTARMUKA (HTML/CSS/JS)</h3>
-    <p>Frontend dibangun dengan HTML5, CSS3 (Flexbox), serta JavaScript Fetch API untuk mengonsumsi REST API. Fitur yang tersedia: form input, dropdown role, tabel pending request, dan tabel history approval.</p>
-
-    <!-- ==================== BAB 7 – FULL SCRIPT PROGRAM JAVA ==================== -->
-    <h3 class="bab">BAB 7 – FULL SCRIPT PROGRAM JAVA</h3>
-    <p>Berikut adalah kode lengkap (full script) dari setiap class Java yang digunakan dalam sistem approval pengadaan berjenjang.</p>
-
-    <h4 class="sub-bab">7.1 ApprovalStatus.java (Enum)</h4>
-    <div class="code-block">
-package com.example.procurementfactory.model;
-
-public enum ApprovalStatus {
-    WAITING_MANAGER,
-    WAITING_DIVISION_HEAD,
-    WAITING_DIRECTOR,
-    APPROVED
-}
+    <div id="frontend" class="tab-content">
+        <h3>4.4 Prototype Antarmuka dengan HTML/CSS/JS</h3>
+        <p>Frontend mengonsumsi REST API, menyediakan form input, serta daftar approval berdasarkan role. Tampilan interaktif telah disesuaikan dengan gaya skripsi formal.</p>
+        <p>Implementasi lengkap dapat diakses pada:<br> 
+        <a href="https://dimask016.github.io/oop06_uas/" target="_blank" style="color:#1f6392; font-weight:bold;">🌐 https://dimask016.github.io/oop06_uas/</a> (GitHub Pages).</p>
+        <p>Sistem juga sudah dideploy di AWS EC2 dengan background process pada port 8081.</p>
     </div>
 
-    <h4 class="sub-bab">7.2 ProcurementRequest.java (Model dengan History)</h4>
-    <div class="code-block">
-package com.example.procurementfactory.model;
+    <!-- BAB 5 s.d 9 disajikan ringkas dengan gaya skripsi -->
+    <h2>BAB 5 – PENJELASAN METODE PROGRAM JAVA</h2>
+    <p>Setiap class memiliki tanggung jawab spesifik: <code>ProcurementRequest</code> menyimpan state dan aturan <code>nextStatusAfter()</code>, <code>ApprovalService</code> mengelola penyimpanan in-memory dan panggilan ke workflow factory. <code>ApprovalController</code> menyediakan REST endpoints. Chain of Responsibility memastikan bahwa setiap handler hanya bertindak jika status sesuai, lalu dilanjutkan ke handler berikutnya bila ada.</p>
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+    <h2>BAB 6 – PROTOTYPE ANTARMUKA & USER TESTING</h2>
+    <p>User testing terhadap 3 responden (Manager, Kepala Divisi, Staff Procurement) menyatakan bahwa workflow approval terstruktur dan riwayat approval otomatis membantu proses audit. Tingkat keberhasilan mencapai <strong>88,9%</strong> setelah perbaikan tombol dan tampilan status berdasarkan masukan iterasi.</p>
 
-public class ProcurementRequest {
-    private String id;
-    private String description;
-    private double amount;
-    private ApprovalStatus status;
-    private List<ApprovalHistoryEntry> approvalHistory;
+    <h2>BAB 7 – FULL SCRIPT PROGRAM JAVA (kode inti)</h2>
+    <p>Kode lengkap (ApprovalStatus, ProcurementRequest, semua handler, service, controller) tersedia di repository source code yang dapat diunduh pada bagian akhir laporan ini. Cuplikan kode strategis di atas menggambarkan implementasi design pattern utama.</p>
 
-    public ProcurementRequest(String description, double amount) {
-        this.id = UUID.randomUUID().toString().substring(0, 8);
-        this.description = description;
-        this.amount = amount;
-        this.status = ApprovalStatus.WAITING_MANAGER;
-        this.approvalHistory = new ArrayList<>();
-    }
+    <h2>BAB 8 – DEPLOYMENT & OPERASI (AWS EC2)</h2>
+    <p>Deployment dilakukan pada Amazon Linux 2023 (t2.micro). Proses menjalankan JAR dengan <code>java -jar procurement-approval-factory-1.0.jar --server.port=8081 & disown</code>. Security Group mengizinkan port 8081. Saat ini aplikasi berjalan stabil dengan background process.</p>
 
-    public String getId() { return id; }
-    public String getDescription() { return description; }
-    public double getAmount() { return amount; }
-    public ApprovalStatus getStatus() { return status; }
-    public void setStatus(ApprovalStatus status) { this.status = status; }
-    public List<ApprovalHistoryEntry> getApprovalHistory() { return approvalHistory; }
+    <h2>BAB 9 – KESIMPULAN & REKOMENDASI</h2>
+    <p><strong>Kesimpulan:</strong> Factory Pattern berhasil memusatkan pembuatan rantai handler, Chain of Responsibility memberikan fleksibilitas approval manual per role, history tercatat lengkap, dan deployment cloud berhasil dilakukan. <strong>Rekomendasi prioritas:</strong> mengganti penyimpanan in-memory dengan PostgreSQL (P0), menambah notifikasi email (P1), dan dashboard analitik (P2).</p>
 
-    public void addHistory(String role, String remark) {
-        approvalHistory.add(new ApprovalHistoryEntry(role, remark, new Date()));
-    }
-
-    // Logika next status sesuai aturan nominal
-    public ApprovalStatus nextStatusAfter(ApprovalStatus current) {
-        switch (current) {
-            case WAITING_MANAGER:
-                if (amount <= 50_000_000) return ApprovalStatus.APPROVED;
-                else return ApprovalStatus.WAITING_DIVISION_HEAD;
-            case WAITING_DIVISION_HEAD:
-                if (amount <= 250_000_000) return ApprovalStatus.APPROVED;
-                else return ApprovalStatus.WAITING_DIRECTOR;
-            case WAITING_DIRECTOR:
-                return ApprovalStatus.APPROVED;
-            default:
-                return ApprovalStatus.APPROVED;
-        }
-    }
-
-    public static class ApprovalHistoryEntry {
-        private String role;
-        private String remark;
-        private Date timestamp;
-
-        public ApprovalHistoryEntry(String role, String remark, Date timestamp) {
-            this.role = role;
-            this.remark = remark;
-            this.timestamp = timestamp;
-        }
-        public String getRole() { return role; }
-        public String getRemark() { return remark; }
-        public Date getTimestamp() { return timestamp; }
-    }
-}
+    <!-- ========== LINK DOWNLOAD SOURCE CODE ========== -->
+    <div style="background: #f4f9f4; border-left: 6px solid #2c6e2f; padding: 20px; margin: 40px 0 20px; border-radius: 12px; text-align: center;">
+        <h3 style="margin-top: 0;">📦 Download Source Code Lengkap</h3>
+        <p>Kode sumber (Java Spring Boot) beserta struktur proyek, static resources, dan konfigurasi Maven tersedia dalam folder Google Drive berikut.</p>
+        <a href="https://drive.google.com/drive/folders/1j-3eNsAkTfus6FRegJvningI0GZKpprh?usp=sharing" target="_blank" class="download-btn">⬇️ DOWNLOAD SOURCE CODE (ZIP / Folder)</a>
+        <p style="font-size: 10pt; margin-top: 15px;">*Folder berisi file <code>pom.xml</code>, folder <code>src/</code>, dan konfigurasi pendukung.</p>
     </div>
 
-    <h4 class="sub-bab">7.3 ApprovalHandler.java (Interface)</h4>
-    <div class="code-block">
-package com.example.procurementfactory.handler;
-
-import com.example.procurementfactory.model.ProcurementRequest;
-
-public interface ApprovalHandler {
-    void handle(ProcurementRequest request);
-    void setNext(ApprovalHandler next);
-}
-    </div>
-
-    <h4 class="sub-bab">7.4 ManagerHandler.java</h4>
-    <div class="code-block">
-package com.example.procurementfactory.handler;
-
-import com.example.procurementfactory.model.ProcurementRequest;
-import com.example.procurementfactory.model.ApprovalStatus;
-
-public class ManagerHandler implements ApprovalHandler {
-    private ApprovalHandler next;
-
-    @Override
-    public void setNext(ApprovalHandler next) { this.next = next; }
-
-    @Override
-    public void handle(ProcurementRequest request) {
-        if (request.getStatus() == ApprovalStatus.WAITING_MANAGER) {
-            request.addHistory("MANAGER", "Manager menyetujui (nominal: " + request.getAmount() + ")");
-            System.out.println("✅ Manager approve: " + request.getDescription());
-            ApprovalStatus newStatus = request.nextStatusAfter(ApprovalStatus.WAITING_MANAGER);
-            request.setStatus(newStatus);
-        } else if (next != null) {
-            next.handle(request);
-        }
-    }
-}
-    </div>
-
-    <h4 class="sub-bab">7.5 DivisionHeadHandler.java</h4>
-    <div class="code-block">
-package com.example.procurementfactory.handler;
-
-import com.example.procurementfactory.model.ProcurementRequest;
-import com.example.procurementfactory.model.ApprovalStatus;
-
-public class DivisionHeadHandler implements ApprovalHandler {
-    private ApprovalHandler next;
-
-    @Override
-    public void setNext(ApprovalHandler next) { this.next = next; }
-
-    @Override
-    public void handle(ProcurementRequest request) {
-        if (request.getStatus() == ApprovalStatus.WAITING_DIVISION_HEAD) {
-            request.addHistory("DIVISION_HEAD", "Kepala Divisi menyetujui (nominal: " + request.getAmount() + ")");
-            System.out.println("✅ Kepala Divisi approve: " + request.getDescription());
-            ApprovalStatus newStatus = request.nextStatusAfter(ApprovalStatus.WAITING_DIVISION_HEAD);
-            request.setStatus(newStatus);
-        } else if (next != null) {
-            next.handle(request);
-        }
-    }
-}
-    </div>
-
-    <h4 class="sub-bab">7.6 DirectorHandler.java</h4>
-    <div class="code-block">
-package com.example.procurementfactory.handler;
-
-import com.example.procurementfactory.model.ProcurementRequest;
-import com.example.procurementfactory.model.ApprovalStatus;
-
-public class DirectorHandler implements ApprovalHandler {
-    private ApprovalHandler next;
-
-    @Override
-    public void setNext(ApprovalHandler next) { this.next = next; }
-
-    @Override
-    public void handle(ProcurementRequest request) {
-        if (request.getStatus() == ApprovalStatus.WAITING_DIRECTOR) {
-            request.addHistory("DIRECTOR", "Direksi menyetujui (nominal: " + request.getAmount() + ")");
-            System.out.println("✅ Direksi approve: " + request.getDescription());
-            ApprovalStatus newStatus = request.nextStatusAfter(ApprovalStatus.WAITING_DIRECTOR);
-            request.setStatus(newStatus);
-        } else if (next != null) {
-            next.handle(request);
-        }
-    }
-}
-    </div>
-
-    <h4 class="sub-bab">7.7 ApprovalHandlerFactory.java (Factory Pattern)</h4>
-    <div class="code-block">
-package com.example.procurementfactory.handler;
-
-public class ApprovalHandlerFactory {
-    public static ApprovalHandler createWorkflow() {
-        ManagerHandler manager = new ManagerHandler();
-        DivisionHeadHandler division = new DivisionHeadHandler();
-        DirectorHandler director = new DirectorHandler();
-        manager.setNext(division);
-        division.setNext(director);
-        return manager;
-    }
-}
-    </div>
-
-    <h4 class="sub-bab">7.8 ApprovalService.java (Service Layer)</h4>
-    <div class="code-block">
-package com.example.procurementfactory.service;
-
-import com.example.procurementfactory.model.ProcurementRequest;
-import com.example.procurementfactory.model.ApprovalStatus;
-import com.example.procurementfactory.handler.ApprovalHandler;
-import com.example.procurementfactory.handler.ApprovalHandlerFactory;
-import org.springframework.stereotype.Service;
-import java.util.*;
-import java.util.stream.Collectors;
-
-@Service
-public class ApprovalService {
-    private final Map<String, ProcurementRequest> requests = new HashMap<>();
-    private final ApprovalHandler workflowEngine;
-
-    public ApprovalService() {
-        this.workflowEngine = ApprovalHandlerFactory.createWorkflow();
-        // Data awal
-        submitRequest("Laptop kantor", 45_000_000);
-        submitRequest("Software ERP", 150_000_000);
-        submitRequest("Renovasi gedung", 800_000_000);
-    }
-
-    public ProcurementRequest submitRequest(String description, double amount) {
-        if (amount > 1_000_000_000) amount = 1_000_000_000;
-        ProcurementRequest req = new ProcurementRequest(description, amount);
-        requests.put(req.getId(), req);
-        return req;
-    }
-
-    public List<ProcurementRequest> getPendingRequestsByRole(String role) {
-        ApprovalStatus requiredStatus = mapRoleToStatus(role);
-        if (requiredStatus == null) return Collections.emptyList();
-        return requests.values().stream()
-                .filter(r -> r.getStatus() == requiredStatus)
-                .collect(Collectors.toList());
-    }
-
-    private ApprovalStatus mapRoleToStatus(String role) {
-        switch (role.toUpperCase()) {
-            case "MANAGER": return ApprovalStatus.WAITING_MANAGER;
-            case "DIVISION_HEAD": return ApprovalStatus.WAITING_DIVISION_HEAD;
-            case "DIRECTOR": return ApprovalStatus.WAITING_DIRECTOR;
-            default: return null;
-        }
-    }
-
-    public boolean approveRequest(String requestId, String role) {
-        ProcurementRequest req = requests.get(requestId);
-        if (req == null) return false;
-        ApprovalStatus expected = mapRoleToStatus(role);
-        if (req.getStatus() != expected) return false;
-        workflowEngine.handle(req);
-        return true;
-    }
-
-    public ProcurementRequest getRequest(String id) { return requests.get(id); }
-    public List<ProcurementRequest> getAllRequests() { return new ArrayList<>(requests.values()); }
-}
-    </div>
-
-    <h4 class="sub-bab">7.9 ApprovalController.java (Controller)</h4>
-    <div class="code-block">
-package com.example.procurementfactory.controller;
-
-import com.example.procurementfactory.model.ProcurementRequest;
-import com.example.procurementfactory.service.ApprovalService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import java.util.List;
-import java.util.Map;
-
-@Controller
-public class ApprovalController {
-    private final ApprovalService service;
-    public ApprovalController(ApprovalService service) { this.service = service; }
-
-    @GetMapping("/")
-    public String index() { return "forward:/index.html"; }
-
-    @GetMapping("/api/requests/{role}")
-    @ResponseBody
-    public List<ProcurementRequest> getRequests(@PathVariable String role) {
-        return service.getPendingRequestsByRole(role);
-    }
-
-    @PostMapping("/api/approve/{id}/{role}")
-    @ResponseBody
-    public ResponseEntity<?> approve(@PathVariable String id, @PathVariable String role) {
-        boolean success = service.approveRequest(id, role);
-        if (success) {
-            ProcurementRequest req = service.getRequest(id);
-            return ResponseEntity.ok(Map.of("success", true, "newStatus", req.getStatus().toString()));
-        } else {
-            return ResponseEntity.badRequest().body(Map.of("success", false));
-        }
-    }
-
-    @PostMapping("/api/submit")
-    @ResponseBody
-    public ProcurementRequest submit(@RequestBody Map<String, Object> payload) {
-        String desc = (String) payload.get("description");
-        double amount = Double.parseDouble(payload.get("amount").toString());
-        return service.submitRequest(desc, amount);
-    }
-
-    @GetMapping("/api/all")
-    @ResponseBody
-    public List<ProcurementRequest> allRequests() { return service.getAllRequests(); }
-
-    @GetMapping("/api/history/{id}")
-    @ResponseBody
-    public List<ProcurementRequest.ApprovalHistoryEntry> getHistory(@PathVariable String id) {
-        ProcurementRequest req = service.getRequest(id);
-        return req != null ? req.getApprovalHistory() : List.of();
-    }
-}
-    </div>
-
-    <h4 class="sub-bab">7.10 ProcurementApplication.java (Main)</h4>
-    <div class="code-block">
-package com.example.procurementfactory;
-
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-@SpringBootApplication
-public class ProcurementApplication {
-    public static void main(String[] args) {
-        SpringApplication.run(ProcurementApplication.class, args);
-    }
-}
-    </div>
-
-    <!-- ==================== BAB 8 – DEPLOYMENT EC2 ==================== -->
-    <h3 class="bab">BAB 8 – DEPLOYMENT & OPERASI (AWS EC2)</h3>
-    <p>Aplikasi dijalankan pada instance AWS EC2 (t2.micro, Amazon Linux 2023) dengan langkah:</p>
-    <div class="code-block">
-        # Upload JAR dan jalankan background dengan disown
-        java -jar target/procurement-approval-factory-1.0.jar --server.port=8081 > app.log 2>&1 & disown
-        
-        # Alternatif menggunakan screen
-        screen -S procurement
-        java -jar target/procurement-approval-factory-1.0.jar --server.port=8081
-    </div>
-    <p>Security Group EC2 mengizinkan inbound port 8081. Akses melalui <code>http://&lt;public-ip&gt;:8081</code>.</p>
-
-    <!-- ==================== BAB 9 – KESIMPULAN ==================== -->
-    <h3 class="bab">BAB 9 – KESIMPULAN & REKOMENDASI</h3>
-    
-    <h4 class="sub-bab">9.1 Kesimpulan</h4>
-    <ul>
-        <li>✅ Factory Pattern berhasil diimplementasikan untuk workflow approval berjenjang.</li>
-        <li>✅ Chain of Responsibility memungkinkan setiap level approval berjalan independen tanpa auto-lanjut.</li>
-        <li>✅ History approval (role + remark + timestamp) terekam lengkap.</li>
-        <li>✅ Aplikasi telah dideploy di EC2 dan berjalan stabil dengan background process.</li>
-    </ul>
-
-    <h4 class="sub-bab">9.2 Rekomendasi Prioritas (Backlog)</h4>
-    <table>
-        <thead><tr><th>Prioritas</th><th>Rekomendasi</th><th>Alasan</th></tr></thead>
-        <tbody>
-            <tr><td>P0</td><td>Integrasi database permanen (PostgreSQL)</td><td>Mengganti Map in-memory</td></tr>
-            <tr>
-    
+    <footer>
+        <p>© 2025 – Dimas Kurniawan (25120300016) | Universitas Cakrawala – Fakultas Ilmu Komputer</p>
+        <p>Laporan Tugas Akhir OOP06: Implementasi Factory Pattern & Chain of Responsibility untuk Workflow Persetujuan Pengadaan Barang/Jasa</p>
+        <p>🔗 Flowchart: <a href="https://drive.google.com/file/d/1YkRU80UrFipWIcx_P5x_3q2P6B6RmcLs/view?usp=sharing" target="_blank">Lihat Flowchart</a> | 🌐 Live Demo: <a href="https://dimask016.github.io/oop06_uas/" target="_blank">GitHub Pages</a></p>
+    </footer>
 </div>
 
+<script>
+    // Tab interaktif
+    const tabBtns = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    function activateTab(tabId) {
+        tabContents.forEach(content => content.classList.remove('active'));
+        tabBtns.forEach(btn => btn.classList.remove('active'));
+        const targetContent = document.getElementById(tabId);
+        if(targetContent) targetContent.classList.add('active');
+        const activeBtn = Array.from(tabBtns).find(btn => btn.getAttribute('data-tab') === tabId);
+        if(activeBtn) activeBtn.classList.add('active');
+    }
+
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const tabId = btn.getAttribute('data-tab');
+            activateTab(tabId);
+        });
+    });
+    // default aktif: struktur
+    activateTab('struktur');
+</script>
 </body>
 </html>
