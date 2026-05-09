@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Analisis Kode: ApprovalService.java | Service Layer & Chain of Responsibility</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: linear-gradient(145deg, #2b2d42 0%, #1e1f2e 100%);
+            padding: 2rem;
+            color: #0f172a;
+        }
+
+        .presentation-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #2b2d42;
+            color: white;
+            padding: 1.5rem 2rem;
+            border-bottom: 4px solid #ef4444;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .header h1 small {
+            font-size: 0.8rem;
+            font-weight: 400;
+            background: #3f4156;
+            padding: 0.25rem 0.8rem;
+            border-radius: 40px;
+            color: #fca5a5;
+        }
+
+        .header p {
+            color: #e2e8f0;
+            margin-top: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .toolbar {
+            padding: 1rem 2rem;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .search-box {
+            flex: 2;
+            min-width: 260px;
+            display: flex;
+            align-items: center;
+            background: white;
+            border: 1px solid #cbd5e1;
+            border-radius: 60px;
+            padding: 0.4rem 1rem;
+            transition: all 0.2s;
+        }
+
+        .search-box:focus-within {
+            border-color: #ef4444;
+            box-shadow: 0 0 0 3px rgba(239,68,68,0.2);
+        }
+
+        .search-box i {
+            color: #64748b;
+            margin-right: 8px;
+            font-style: normal;
+            font-weight: 500;
+        }
+
+        .search-box input {
+            border: none;
+            padding: 0.6rem 0;
+            width: 100%;
+            font-size: 0.95rem;
+            background: transparent;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .stats {
+            background: #fee2e2;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #991b1b;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            max-height: 65vh;
+            overflow-y: auto;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .code-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 0.85rem;
+            line-height: 1.45;
+        }
+
+        .code-table th {
+            background: #4a4e6b;
+            color: #f1f5f9;
+            font-weight: 600;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            padding: 1rem 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+
+        .code-table td {
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid #eef2ff;
+            vertical-align: top;
+            background-color: white;
+        }
+
+        .code-table td:first-child, .code-table th:first-child {
+            width: 65px;
+            text-align: center;
+            background-color: #fef2f2;
+            font-weight: 500;
+            color: #991b1b;
+        }
+        .code-table th:first-child {
+            background-color: #5f6382;
+            color: #fecaca;
+        }
+
+        .code-table td:nth-child(2) {
+            font-family: 'Courier New', 'JetBrains Mono', monospace;
+            background-color: #fefdf7;
+            word-break: break-word;
+            white-space: pre-wrap;
+        }
+
+        .code-table td:nth-child(3) {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: #ffffff;
+            color: #2d3e5f;
+            line-height: 1.4;
+        }
+
+        .code-table tbody tr:hover td {
+            background-color: #f1f5f9;
+        }
+        .code-table tbody tr:hover td:first-child {
+            background-color: #fee2e2;
+        }
+
+        .note-service {
+            background: #fef2f2;
+            border-left: 6px solid #ef4444;
+            padding: 1rem 2rem;
+            margin: 0;
+            font-size: 0.9rem;
+            color: #7f1d1d;
+            line-height: 1.5;
+            font-family: 'Segoe UI', system-ui;
+        }
+
+        .footer {
+            padding: 1rem 2rem;
+            background: #f1f5f9;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #475569;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        @media (max-width: 760px) {
+            body {
+                padding: 1rem;
+            }
+            .code-table td, .code-table th {
+                padding: 0.6rem 0.8rem;
+            }
+            .header h1 {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="presentation-container">
+    <div class="header">
+        <h1>
+            ⚙️ ApprovalService.java 
+            <small>Service Layer (Spring @Service)</small>
+        </h1>
+        <p>Mengelola penyimpanan request, logika approval, integrasi dengan Chain of Responsibility, dan penyediaan data untuk controller.</p>
+    </div>
+
+    <div class="toolbar">
+        <div class="search-box">
+            <i>🔍</i>
+            <input type="text" id="searchInput" placeholder="Cari kode atau penjelasan... (contoh: @Service, submitRequest, approveRequest, mapRoleToStatus)">
+        </div>
+        <div class="stats" id="statsCount">Menampilkan 47 baris</div>
+    </div>
+
+    <div class="table-wrapper">
+        <table class="code-table" id="codeTable">
+            <thead>
+                <tr>
+                    <th>Baris</th>
+                    <th>Kode (source)</th>
+                    <th>Penjelasan & Fungsi</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- Data diisi JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note-service">
+        🧩 <strong>Analisis ApprovalService sebagai Service Layer</strong><br>
+        • <code>@Service</code> anotasi Spring → menandai kelas sebagai service (business logic) dan otomatis didaftarkan sebagai bean.<br>
+        • Menyimpan semua ProcurementRequest dalam <code>Map<String, ProcurementRequest></code> sebagai database in-memory.<br>
+        • <code>workflowEngine</code> adalah rantai handler yang dibuat oleh <code>ApprovalHandlerFactory</code>.<br>
+        • <strong>Alur approval:</strong> Controller memanggil <code>approveRequest(id, role)</code> → service memvalidasi status sesuai role → memanggil <code>workflowEngine.handle(req)</code> yang menjalankan chain.<br>
+        • Data sample dibuat di konstruktor untuk demo (5 request dengan nominal berbeda).<br>
+        • <code>mapRoleToStatus</code> method private untuk konversi role string ke enum status yang diharapkan.
+    </div>
+    <div class="footer">
+        ✅ Spring Service | In-memory database | Integrasi Chain of Responsibility | Method untuk manajemen request approval
+    </div>
+</div>
+
+<script>
+    // Data lengkap berdasarkan file ApprovalService.java (47 baris termasuk kosong dan komentar)
+    const rowsData = [
+        { baris: 1, kode: "package com.example.procurementfactory.service;", penjelasan: "Mendeklarasikan paket service, tempat kelas-kelas logika bisnis." },
+        { baris: 2, kode: "", penjelasan: "Baris kosong." },
+        { baris: 3, kode: "import com.example.procurementfactory.model.ProcurementRequest;", penjelasan: "Mengimpor kelas model ProcurementRequest." },
+        { baris: 4, kode: "import com.example.procurementfactory.model.ApprovalStatus;", penjelasan: "Mengimpor enum ApprovalStatus." },
+        { baris: 5, kode: "import com.example.procurementfactory.handler.ApprovalHandler;", penjelasan: "Mengimpor interface ApprovalHandler untuk rantai." },
+        { baris: 6, kode: "import com.example.procurementfactory.handler.ApprovalHandlerFactory;", penjelasan: "Mengimpor factory untuk membuat rantai handler." },
+        { baris: 7, kode: "import org.springframework.stereotype.Service;", penjelasan: "Mengimpor anotasi @Service dari Spring Framework." },
+        { baris: 8, kode: "", penjelasan: "Baris kosong." },
+        { baris: 9, kode: "import java.util.*;", penjelasan: "Mengimpor seluruh kelas utility Java (ArrayList, HashMap, dll)." },
+        { baris: 10, kode: "import java.util.stream.Collectors;", penjelasan: "Mengimpor Collectors untuk stream API (pengelompokan hasil filter)." },
+        { baris: 11, kode: "", penjelasan: "Baris kosong." },
+        { baris: 12, kode: "@Service", penjelasan: "Anotasi Spring: kelas ini adalah service bean, akan dikelola oleh Spring container dan dapat diinject ke controller." },
+        { baris: 13, kode: "public class ApprovalService {", penjelasan: "Deklarasi kelas publik ApprovalService." },
+        { baris: 14, kode: "    private final Map<String, ProcurementRequest> requests = new HashMap<>();", penjelasan: "Map sebagai penyimpanan in-memory: key = ID request, value = objek ProcurementRequest. Final karena tidak akan diganti referensinya." },
+        { baris: 15, kode: "    private final ApprovalHandler workflowEngine;", penjelasan: "Referensi ke rantai handler (ApprovalHandler) yang akan digunakan untuk memproses approval." },
+        { baris: 16, kode: "", penjelasan: "Baris kosong." },
+        { baris: 17, kode: "    public ApprovalService() {", penjelasan: "Konstruktor publik (tidak perlu parameter karena dependency injection tidak diperlukan untuk factory)." },
+        { baris: 18, kode: "        this.workflowEngine = ApprovalHandlerFactory.createWorkflow();", penjelasan: "Membangun rantai handler melalui factory (Manager → DivisionHead → Director)." },
+        { baris: 19, kode: "", penjelasan: "Baris kosong." },
+        { baris: 20, kode: "        // Sample data (optional)", penjelasan: "Komentar: data contoh untuk keperluan testing/demo." },
+        { baris: 21, kode: "        submitRequest(\"Laptop kantor\", 45_000_000);", penjelasan: "Membuat request contoh: Laptop kantor 45 juta (langsung approved oleh manager karena ≤50jt)." },
+        { baris: 22, kode: "        submitRequest(\"Software ERP\", 150_000_000);", penjelasan: "Software ERP 150 juta (Manager approve → lanjut ke Division Head karena >50jt; Division Head approve → langsung APPROVED karena ≤250jt)." },
+        { baris: 23, kode: "        submitRequest(\"Renovasi gedung\", 800_000_000);", penjelasan: "Renovasi gedung 800jt (Manager → Division Head → Director → APPROVED karena >250jt)." },
+        { baris: 24, kode: "        submitRequest(\"Alat tulis\", 5_000_000);", penjelasan: "Alat tulis 5jt (langsung APPROVED oleh manager)." },
+        { baris: 25, kode: "        submitRequest(\"Server baru\", 120_000_000);", penjelasan: "Server baru 120jt (Manager → Division Head → APPROVED karena ≤250jt)." },
+        { baris: 26, kode: "        submitRequest(\"Kendaraan operasional\", 300_000_000);", penjelasan: "Kendaraan operasional 300jt (Manager → Division Head → Director → APPROVED karena >250jt)." },
+        { baris: 27, kode: "    }", penjelasan: "Penutup konstruktor." },
+        { baris: 28, kode: "", penjelasan: "Baris kosong." },
+        { baris: 29, kode: "    public ProcurementRequest submitRequest(String description, double amount) {", penjelasan: "Method publik untuk mengajukan request baru." },
+        { baris: 30, kode: "        if (amount > 1_000_000_000) amount = 1_000_000_000; // batas maksimal 1M", penjelasan: "Validasi: jika nominal melebihi 1 Miliar, set ke 1 Miliar (batas maksimal)." },
+        { baris: 31, kode: "        ProcurementRequest req = new ProcurementRequest(description, amount);", penjelasan: "Membuat objek ProcurementRequest baru via konstruktor (otomatis status WAITING_MANAGER)." },
+        { baris: 32, kode: "        requests.put(req.getId(), req);", penjelasan: "Menyimpan request ke Map dengan key = ID request." },
+        { baris: 33, kode: "        return req;", penjelasan: "Mengembalikan request yang baru dibuat (bisa langsung dikirim ke frontend)." },
+        { baris: 34, kode: "    }", penjelasan: "Penutup method submitRequest." },
+        { baris: 35, kode: "", penjelasan: "Baris kosong." },
+        { baris: 36, kode: "    public List<ProcurementRequest> getPendingRequestsByRole(String role) {", penjelasan: "Method untuk mendapatkan daftar request yang pending (menunggu approval) untuk role tertentu." },
+        { baris: 37, kode: "        ApprovalStatus requiredStatus = mapRoleToStatus(role);", penjelasan: "Konversi string role (MANAGER, DIVISION_HEAD, DIRECTOR) ke nilai enum ApprovalStatus yang sesuai." },
+        { baris: 38, kode: "        if (requiredStatus == null) return Collections.emptyList();", penjelasan: "Jika role tidak dikenali, kembalikan list kosong." },
+        { baris: 39, kode: "        return requests.values().stream()", penjelasan: "Mulai stream dari semua request yang tersimpan." },
+        { baris: 40, kode: "                .filter(r -> r.getStatus() == requiredStatus)", penjelasan: "Filter hanya request yang statusnya sama dengan requiredStatus." },
+        { baris: 41, kode: "                .collect(Collectors.toList());", penjelasan: "Kumpulkan hasil filter ke dalam List dan kembalikan." },
+        { baris: 42, kode: "    }", penjelasan: "Penutup method getPendingRequestsByRole." },
+        { baris: 43, kode: "", penjelasan: "Baris kosong." },
+        { baris: 44, kode: "    private ApprovalStatus mapRoleToStatus(String role) {", penjelasan: "Method private untuk memetakan string role ke enum ApprovalStatus." },
+        { baris: 45, kode: "        switch (role.toUpperCase()) {", penjelasan: "Switch case dengan role yang diubah ke huruf besar (case-insensitive)." },
+        { baris: 46, kode: "            case \"MANAGER\": return ApprovalStatus.WAITING_MANAGER;", penjelasan: "Role MANAGER → status WAITING_MANAGER." },
+        { baris: 47, kode: "            case \"DIVISION_HEAD\": return ApprovalStatus.WAITING_DIVISION_HEAD;", penjelasan: "Role DIVISION_HEAD → WAITING_DIVISION_HEAD." },
+        { baris: 48, kode: "            case \"DIRECTOR\": return ApprovalStatus.WAITING_DIRECTOR;", penjelasan: "Role DIRECTOR → WAITING_DIRECTOR." },
+        { baris: 49, kode: "            default: return null;", penjelasan: "Role tidak dikenal → kembalikan null." },
+        { baris: 50, kode: "        }", penjelasan: "Penutup switch." },
+        { baris: 51, kode: "    }", penjelasan: "Penutup method mapRoleToStatus." },
+        { baris: 52, kode: "", penjelasan: "Baris kosong." },
+        { baris: 53, kode: "    public boolean approveRequest(String requestId, String role) {", penjelasan: "Method untuk melakukan approval terhadap request berdasarkan role." },
+        { baris: 54, kode: "        ProcurementRequest req = requests.get(requestId);", penjelasan: "Ambil request dari Map berdasarkan ID." },
+        { baris: 55, kode: "        if (req == null) return false;", penjelasan: "Jika request tidak ditemukan, return false." },
+        { baris: 56, kode: "", penjelasan: "Baris kosong." },
+        { baris: 57, kode: "        ApprovalStatus expected = mapRoleToStatus(role);", penjelasan: "Cari status yang diharapkan berdasarkan role." },
+        { baris: 58, kode: "        if (req.getStatus() != expected) return false;", penjelasan: "Jika status request saat ini tidak sesuai dengan yang diharapkan (misal role MANAGER tapi status WAITING_DIVISION_HEAD), maka approval gagal." },
+        { baris: 59, kode: "", penjelasan: "Baris kosong." },
+        { baris: 60, kode: "        workflowEngine.handle(req);", penjelasan: "Memanggil rantai handler (dimulai dari ManagerHandler). Handler akan memproses request, mencatat history, dan mengubah status sesuai aturan." },
+        { baris: 61, kode: "        return true;", penjelasan: "Approval berhasil." },
+        { baris: 62, kode: "    }", penjelasan: "Penutup method approveRequest." },
+        { baris: 63, kode: "", penjelasan: "Baris kosong." },
+        { baris: 64, kode: "    public ProcurementRequest getRequest(String id) {", penjelasan: "Method untuk mengambil satu request berdasarkan ID." },
+        { baris: 65, kode: "        return requests.get(id);", penjelasan: "Mengembalikan request dari Map, atau null jika tidak ada." },
+        { baris: 66, kode: "    }", penjelasan: "Penutup method getRequest." },
+        { baris: 67, kode: "", penjelasan: "Baris kosong." },
+        { baris: 68, kode: "    public List<ProcurementRequest> getAllRequests() {", penjelasan: "Method untuk mendapatkan semua request (untuk keperluan admin/debug)." },
+        { baris: 69, kode: "        return new ArrayList<>(requests.values());", penjelasan: "Mengembalikan list baru berisi semua nilai dari Map (agar tidak memodifikasi Map asli)." },
+        { baris: 70, kode: "    }", penjelasan: "Penutup method getAllRequests." },
+        { baris: 71, kode: "}", penjelasan: "Penutup kelas ApprovalService." }
+    ];
+
+    function renderTable(filterText = "") {
+        const tbody = document.getElementById("tableBody");
+        tbody.innerHTML = "";
+        const lowerFilter = filterText.trim().toLowerCase();
+        
+        let filteredRows = rowsData;
+        if (lowerFilter !== "") {
+            filteredRows = rowsData.filter(row => 
+                row.kode.toLowerCase().includes(lowerFilter) || 
+                row.penjelasan.toLowerCase().includes(lowerFilter)
+            );
+        }
+        
+        const statsSpan = document.getElementById("statsCount");
+        statsSpan.textContent = `Menampilkan ${filteredRows.length} dari ${rowsData.length} baris`;
+        
+        if (filteredRows.length === 0) {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `<td colspan="3" style="text-align:center; padding:2rem;">🔎 Tidak ditemukan hasil untuk "${filterText}"</td>`;
+            tbody.appendChild(tr);
+            return;
+        }
+        
+        for (const row of filteredRows) {
+            const tr = document.createElement("tr");
+            const tdBaris = document.createElement("td");
+            tdBaris.textContent = row.baris;
+            const tdKode = document.createElement("td");
+            tdKode.textContent = row.kode === "" ? " " : row.kode;
+            const tdPenjelasan = document.createElement("td");
+            tdPenjelasan.textContent = row.penjelasan;
+            tr.appendChild(tdBaris);
+            tr.appendChild(tdKode);
+            tr.appendChild(tdPenjelasan);
+            tbody.appendChild(tr);
+        }
+    }
+    
+    const searchInput = document.getElementById("searchInput");
+    searchInput.addEventListener("input", (e) => {
+        renderTable(e.target.value);
+    });
+    
+    renderTable();
+</script>
+</body>
+</html>
