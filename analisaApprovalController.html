@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Analisis Kode: ApprovalController.java | Spring Boot Controller</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            padding: 2rem;
+            color: #0f172a;
+        }
+
+        .presentation-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #0a0f1c;
+            color: white;
+            padding: 1.5rem 2rem;
+            border-bottom: 4px solid #10b981;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .header h1 small {
+            font-size: 0.8rem;
+            font-weight: 400;
+            background: #1e293b;
+            padding: 0.25rem 0.8rem;
+            border-radius: 40px;
+            color: #94a3b8;
+        }
+
+        .header p {
+            color: #cbd5e1;
+            margin-top: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .toolbar {
+            padding: 1rem 2rem;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .search-box {
+            flex: 2;
+            min-width: 260px;
+            display: flex;
+            align-items: center;
+            background: white;
+            border: 1px solid #cbd5e1;
+            border-radius: 60px;
+            padding: 0.4rem 1rem;
+            transition: all 0.2s;
+        }
+
+        .search-box:focus-within {
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16,185,129,0.2);
+        }
+
+        .search-box i {
+            color: #64748b;
+            margin-right: 8px;
+            font-style: normal;
+            font-weight: 500;
+        }
+
+        .search-box input {
+            border: none;
+            padding: 0.6rem 0;
+            width: 100%;
+            font-size: 0.95rem;
+            background: transparent;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .stats {
+            background: #dcfce7;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #166534;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            max-height: 65vh;
+            overflow-y: auto;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .code-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 0.85rem;
+            line-height: 1.45;
+        }
+
+        .code-table th {
+            background: #1e293b;
+            color: #f1f5f9;
+            font-weight: 600;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            padding: 1rem 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+
+        .code-table td {
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid #eef2ff;
+            vertical-align: top;
+            background-color: white;
+        }
+
+        .code-table td:first-child, .code-table th:first-child {
+            width: 65px;
+            text-align: center;
+            background-color: #f0fdf4;
+            font-weight: 500;
+            color: #14532d;
+        }
+        .code-table th:first-child {
+            background-color: #334155;
+            color: #86efac;
+        }
+
+        .code-table td:nth-child(2) {
+            font-family: 'Courier New', 'JetBrains Mono', monospace;
+            background-color: #fefdf7;
+            word-break: break-word;
+            white-space: pre-wrap;
+        }
+
+        .code-table td:nth-child(3) {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: #ffffff;
+            color: #2d3e5f;
+            line-height: 1.4;
+        }
+
+        .code-table tbody tr:hover td {
+            background-color: #f1f5f9;
+        }
+        .code-table tbody tr:hover td:first-child {
+            background-color: #dcfce7;
+        }
+
+        .note-spring {
+            background: #ecfdf5;
+            border-left: 6px solid #10b981;
+            padding: 1rem 2rem;
+            margin: 0;
+            font-size: 0.9rem;
+            color: #064e3b;
+            line-height: 1.5;
+            font-family: 'Segoe UI', system-ui;
+        }
+
+        .footer {
+            padding: 1rem 2rem;
+            background: #f1f5f9;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #475569;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        @media (max-width: 760px) {
+            body {
+                padding: 1rem;
+            }
+            .code-table td, .code-table th {
+                padding: 0.6rem 0.8rem;
+            }
+            .header h1 {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="presentation-container">
+    <div class="header">
+        <h1>
+            🎮 ApprovalController.java 
+            <small>Spring Boot REST Controller</small>
+        </h1>
+        <p>Endpoint untuk mengelola pengajuan procurement, approval multi-role, riwayat, dan integrasi dengan service layer.</p>
+    </div>
+
+    <div class="toolbar">
+        <div class="search-box">
+            <i>🔍</i>
+            <input type="text" id="searchInput" placeholder="Cari kode atau penjelasan... (contoh: @GetMapping, ResponseEntity, @PathVariable)">
+        </div>
+        <div class="stats" id="statsCount">Menampilkan 36 baris</div>
+    </div>
+
+    <div class="table-wrapper">
+        <table class="code-table" id="codeTable">
+            <thead>
+                <tr>
+                    <th>Baris</th>
+                    <th>Kode (source)</th>
+                    <th>Penjelasan & Fungsi</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- Data dinamis dari JS -->
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note-spring">
+        🍃 <strong>Catatan Spring Framework :</strong> <br>
+        • <code>@Controller</code> → menandakan kelas sebagai controller Spring MVC, dapat mengembalikan view atau data (dengan <code>@ResponseBody</code>). <br>
+        • <code>@ResponseBody</code> → membuat return value langsung ditulis ke HTTP response (bukan view resolver). <br>
+        • <code>@PathVariable</code> → mengambil nilai dari template URL. <br>
+        • <code>ResponseEntity</code> → kontrol penuh atas status HTTP, header, dan body response. <br>
+        • Dependency Injection via konstruktor → field <code>service</code> bersifat <code>final</code> dan diinjeksi otomatis oleh Spring.
+    </div>
+    <div class="footer">
+        ⚙️ REST API dengan Spring Boot | Endpoint: submit, approve, daftar request, history | Mapping berdasarkan role
+    </div>
+</div>
+
+<script>
+    // Data lengkap berdasarkan file ApprovalController.java (36 baris termasuk baris kosong? disesuaikan isi)
+    const rowsData = [
+        { baris: 1, kode: "package com.example.procurementfactory.controller;", penjelasan: "Mendeklarasikan paket controller, sebagai tempat kelas pengendali web." },
+        { baris: 2, kode: "", penjelasan: "Baris kosong (pemisah)" },
+        { baris: 3, kode: "import com.example.procurementfactory.model.ProcurementRequest;", penjelasan: "Mengimpor kelas model ProcurementRequest untuk digunakan dalam response API." },
+        { baris: 4, kode: "import com.example.procurementfactory.service.ApprovalService;", penjelasan: "Mengimpor service layer yang berisi logika bisnis approval." },
+        { baris: 5, kode: "import org.springframework.http.ResponseEntity;", penjelasan: "Kelas Spring untuk membangun response HTTP dengan status dan body yang fleksibel." },
+        { baris: 6, kode: "import org.springframework.stereotype.Controller;", penjelasan: "Anotasi Spring yang menandai kelas sebagai controller (mendukung MVC dan REST)." },
+        { baris: 7, kode: "import org.springframework.web.bind.annotation.*;", penjelasan: "Mengimpor semua anotasi web: @GetMapping, @PostMapping, @PathVariable, @ResponseBody, dll." },
+        { baris: 8, kode: "", penjelasan: "Baris kosong" },
+        { baris: 9, kode: "import java.util.List;", penjelasan: "Mengimpor List untuk mengembalikan koleksi data." },
+        { baris: 10, kode: "import java.util.Map;", penjelasan: "Mengimpor Map untuk membuat response JSON sederhana (key-value)." },
+        { baris: 11, kode: "", penjelasan: "Baris kosong" },
+        { baris: 12, kode: "@Controller", penjelasan: "Anotasi Spring : kelas ini sebagai controller Web. Spring akan mendeteksi dan mendaftarkannya." },
+        { baris: 13, kode: "public class ApprovalController {", penjelasan: "Deklarasi publik kelas ApprovalController, dapat diakses dari paket lain." },
+        { baris: 14, kode: "    private final ApprovalService service;", penjelasan: "Field final untuk service (immutable reference). Final memastikan hanya diisi sekali via konstruktor." },
+        { baris: 15, kode: "", penjelasan: "Baris kosong" },
+        { baris: 16, kode: "    public ApprovalController(ApprovalService service) {", penjelasan: "Konstruktor dengan dependency injection (Spring secara otomatis inject service)." },
+        { baris: 17, kode: "        this.service = service;", penjelasan: "Mengassign service yang diterima ke field kelas." },
+        { baris: 18, kode: "    }", penjelasan: "Penutup konstruktor." },
+        { baris: 19, kode: "", penjelasan: "Baris kosong" },
+        { baris: 20, kode: "    @GetMapping(\"/\")", penjelasan: "Mapping HTTP GET ke root path. Menangani request ke '/'." },
+        { baris: 21, kode: "    public String index() {", penjelasan: "Method index() mengembalikan nama view atau forward string." },
+        { baris: 22, kode: "        return \"forward:/index.html\";", penjelasan: "Meneruskan request (forward) ke file statis index.html (biasa untuk SPA atau halaman utama)." },
+        { baris: 23, kode: "    }", penjelasan: "Penutup method index." },
+        { baris: 24, kode: "", penjelasan: "Baris kosong" },
+        { baris: 25, kode: "    @GetMapping(\"/api/requests/{role}\")", penjelasan: "GET endpoint dengan path variable {role}. Contoh: /api/requests/manager" },
+        { baris: 26, kode: "    @ResponseBody", penjelasan: "Menandakan bahwa return value langsung ditulis ke response body (bukan view)." },
+        { baris: 27, kode: "    public List<ProcurementRequest> getRequests(@PathVariable String role) {", penjelasan: "Method mengambil @PathVariable 'role' dari URL, lalu mengembalikan List ProcurementRequest." },
+        { baris: 28, kode: "        return service.getPendingRequestsByRole(role);", penjelasan: "Memanggil service untuk mendapatkan daftar request yang pending berdasarkan role." },
+        { baris: 29, kode: "    }", penjelasan: "Penutup method." },
+        { baris: 30, kode: "", penjelasan: "Baris kosong" },
+        { baris: 31, kode: "    @PostMapping(\"/api/approve/{id}/{role}\")", penjelasan: "POST endpoint untuk approve request. Path: /api/approve/{id}/{role}" },
+        { baris: 32, kode: "    @ResponseBody", penjelasan: "Response langsung berupa JSON / teks." },
+        { baris: 33, kode: "    public ResponseEntity<?> approve(@PathVariable String id, @PathVariable String role) {", penjelasan: "Mengambil id dan role dari URL. Mengembalikan ResponseEntity (fleksibel, bisa berisi Map atau error)." },
+        { baris: 34, kode: "        boolean success = service.approveRequest(id, role);", penjelasan: "Memanggil service untuk melakukan approval. Mengembalikan true jika berhasil." },
+        { baris: 35, kode: "        if (success) {", penjelasan: "Jika approval berhasil." },
+        { baris: 36, kode: "            ProcurementRequest req = service.getRequest(id);", penjelasan: "Ambil data request yang sudah di-approve." },
+        { baris: 37, kode: "            return ResponseEntity.ok(Map.of(\"success\", true, \"newStatus\", req.getStatus().toString()));", penjelasan: "Mengembalikan HTTP 200 dengan body JSON berisi success=true dan status terbaru." },
+        { baris: 38, kode: "        } else {", penjelasan: "Jika approval gagal (misal role tidak sesuai atau id tidak ditemukan)." },
+        { baris: 39, kode: "            return ResponseEntity.badRequest().body(Map.of(\"success\", false));", penjelasan: "Mengembalikan HTTP 400 (Bad Request) dengan pesan sederhana." },
+        { baris: 40, kode: "        }", penjelasan: "Penutup if-else." },
+        { baris: 41, kode: "    }", penjelasan: "Penutup method approve." },
+        { baris: 42, kode: "", penjelasan: "Baris kosong" },
+        { baris: 43, kode: "    @PostMapping(\"/api/submit\")", penjelasan: "POST endpoint untuk mengajukan procurement request baru." },
+        { baris: 44, kode: "    @ResponseBody", penjelasan: "Response berisi data ProcurementRequest yang baru dibuat (JSON)." },
+        { baris: 45, kode: "    public ProcurementRequest submit(@RequestBody Map<String, Object> payload) {", penjelasan: "@RequestBody membaca JSON request dan memetakannya ke Map. Mengembalikan ProcurementRequest." },
+        { baris: 46, kode: "        String desc = (String) payload.get(\"description\");", penjelasan: "Ekstrak nilai 'description' dari JSON payload." },
+        { baris: 47, kode: "        double amount = Double.parseDouble(payload.get(\"amount\").toString());", penjelasan: "Ekstrak 'amount', konversi ke double." },
+        { baris: 48, kode: "        return service.submitRequest(desc, amount);", penjelasan: "Memanggil service untuk menyimpan request baru, lalu mengembalikan objek yang telah dibuat (termasuk ID, status awal)." },
+        { baris: 49, kode: "    }", penjelasan: "Penutup method submit." },
+        { baris: 50, kode: "", penjelasan: "Baris kosong" },
+        { baris: 51, kode: "    @GetMapping(\"/api/all\")", penjelasan: "GET endpoint untuk mengambil semua procurement request yang ada." },
+        { baris: 52, kode: "    @ResponseBody", penjelasan: "Response langsung berupa daftar JSON." },
+        { baris: 53, kode: "    public List<ProcurementRequest> allRequests() {", penjelasan: "Method menangani /api/all." },
+        { baris: 54, kode: "        return service.getAllRequests();", penjelasan: "Mengembalikan semua request dari service (mungkin untuk admin atau debugging)." },
+        { baris: 55, kode: "    }", penjelasan: "Penutup." },
+        { baris: 56, kode: "", penjelasan: "Baris kosong" },
+        { baris: 57, kode: "    @GetMapping(\"/api/history/{id}\")", penjelasan: "GET endpoint untuk melihat riwayat approval dari suatu request berdasarkan ID." },
+        { baris: 58, kode: "    @ResponseBody", penjelasan: "Response berupa list riwayat approval." },
+        { baris: 59, kode: "    public List<ProcurementRequest.ApprovalHistoryEntry> getHistory(@PathVariable String id) {", penjelasan: "Menerima ID dari path variable." },
+        { baris: 60, kode: "        ProcurementRequest req = service.getRequest(id);", penjelasan: "Cari request berdasarkan ID menggunakan service." },
+        { baris: 61, kode: "        return req != null ? req.getApprovalHistory() : List.of();", penjelasan: "Jika ditemukan, kembalikan daftar riwayatnya. Jika tidak, kembalikan list kosong (immutable List.of())." },
+        { baris: 62, kode: "    }", penjelasan: "Penutup method getHistory." },
+        { baris: 63, kode: "}", penjelasan: "Penutup kelas ApprovalController." }
+    ];
+
+    // Render tabel berdasarkan filter
+    function renderTable(filterText = "") {
+        const tbody = document.getElementById("tableBody");
+        tbody.innerHTML = "";
+        const lowerFilter = filterText.trim().toLowerCase();
+        
+        let filteredRows = rowsData;
+        if (lowerFilter !== "") {
+            filteredRows = rowsData.filter(row => 
+                row.kode.toLowerCase().includes(lowerFilter) || 
+                row.penjelasan.toLowerCase().includes(lowerFilter)
+            );
+        }
+        
+        const statsSpan = document.getElementById("statsCount");
+        statsSpan.textContent = `Menampilkan ${filteredRows.length} dari ${rowsData.length} baris`;
+        
+        if (filteredRows.length === 0) {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `<td colspan="3" style="text-align:center; padding:2rem;">🔎 Tidak ada baris yang cocok dengan "${filterText}"</td>`;
+            tbody.appendChild(tr);
+            return;
+        }
+        
+        for (const row of filteredRows) {
+            const tr = document.createElement("tr");
+            const tdBaris = document.createElement("td");
+            tdBaris.textContent = row.baris;
+            const tdKode = document.createElement("td");
+            tdKode.textContent = row.kode === "" ? " " : row.kode;
+            const tdPenjelasan = document.createElement("td");
+            tdPenjelasan.textContent = row.penjelasan;
+            tr.appendChild(tdBaris);
+            tr.appendChild(tdKode);
+            tr.appendChild(tdPenjelasan);
+            tbody.appendChild(tr);
+        }
+    }
+    
+    // Event listener search
+    const searchInput = document.getElementById("searchInput");
+    searchInput.addEventListener("input", (e) => {
+        renderTable(e.target.value);
+    });
+    
+    // Render awal
+    renderTable();
+</script>
+</body>
+</html>
