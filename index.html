@@ -292,8 +292,29 @@
             .diamond-content { font-size: 9pt; }
         }
         
-
-
+        .screenshot-container {
+            margin: 25px 0 15px 0;
+            text-align: center;
+            background: #fefefe;
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .screenshot-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            border: 1px solid #cbd5e0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .screenshot-caption {
+            margin-top: 12px;
+            font-size: 10pt;
+            font-style: italic;
+            color: #2d3748;
+            text-align: center;
+        }
 
         @media (max-width: 768px) {
             .skripsi-container {
@@ -320,7 +341,7 @@
     
     <p style="text-align: center; margin-top: 40px;"><strong>Dimas Kurniawan</strong><br>NIM: 25120300016</p>
     
-    <p style="text-align: center; margin-top: 40px;">PROGRAM STUDI ILMU KOMPUTER<br>FAKULTAS ILMU KOMPUTER<br>UNIVERSITAS CAKRAWALA<br>2025</p>
+    <p style="text-align: center; margin-top: 40px;">PROGRAM STUDI ILMU KOMPUTER<br>FAKULTAS ILMU KOMPUTER<br>UNIVERSITAS CAKRAWALA<br>2026</p>
 
     <!-- ==================== LEMBAR PENGESAHAN ==================== -->
     <div style="margin-top: 60px;">
@@ -669,8 +690,8 @@ public static ApprovalHandler createWorkflow() {
         <table class="role-table">
             <thead><tr><th>ID</th><th>Deskripsi</th><th>Nilai (Rp)</th><th>Status</th><th>Aksi</th></tr></thead>
             <tbody>
-                <tr><td>PR-001</code></code></code></td><td>Pembelian laptop kantor</td><td>45.000.000</td><td>WAITING_MANAGER</td><td><button style="background:#27ae60; color:white; padding:5px 12px; border:none; border-radius:4px;">Approve</button></td>
-                <tr><td>PR-004</td><td>Alat tulis kantor</td><td>5.000.000</td><td>WAITING_MANAGER</td><td><button style="background:#27ae60; color:white; padding:5px 12px; border:none; border-radius:4px;">Approve</button></td>
+                <tr><td>PR-001</td><td>Pembelian laptop kantor</td><td>45.000.000</td><td>WAITING_MANAGER</td><td><button style="background:#27ae60; color:white; padding:5px 12px; border:none; border-radius:4px;">Approve</button></td></tr>
+                <tr><td>PR-004</td><td>Alat tulis kantor</td><td>5.000.000</td><td>WAITING_MANAGER</td><td><button style="background:#27ae60; color:white; padding:5px 12px; border:none; border-radius:4px;">Approve</button></td></tr>
             </tbody>
         </table>
         
@@ -678,8 +699,8 @@ public static ApprovalHandler createWorkflow() {
         <table class="role-table">
             <thead><tr><th>ID</th><th>Deskripsi</th><th>Nilai (Rp)</th><th>Status</th><th>Aksi</th></tr></thead>
             <tbody>
-                <tr><td>PR-002</td><td>Pengadaan software ERP</td><td>250.000.000</td><td>WAITING_DIVISION_HEAD</td><td><button style="background:#27ae60; color:white; padding:5px 12px; border:none; border-radius:4px;">Approve</button></td>
-                <tr><td>PR-005</td><td>Server baru</td><td>120.000.000</td><td>WAITING_DIVISION_HEAD</td><td><button style="background:#27ae60; color:white; padding:5px 12px; border:none; border-radius:4px;">Approve</button></td>
+                <tr><td>PR-002</td><td>Pengadaan software ERP</td><td>250.000.000</td><td>WAITING_DIVISION_HEAD</td><td><button style="background:#27ae60; color:white; padding:5px 12px; border:none; border-radius:4px;">Approve</button></td></tr>
+                <tr><td>PR-005</td><td>Server baru</td><td>120.000.000</td><td>WAITING_DIVISION_HEAD</td><td><button style="background:#27ae60; color:white; padding:5px 12px; border:none; border-radius:4px;">Approve</button></td></tr>
             </tbody>
         </table>
         
@@ -687,8 +708,8 @@ public static ApprovalHandler createWorkflow() {
         <table class="role-table">
             <thead><tr><th>ID</th><th>Deskripsi</th><th>Nilai (Rp)</th><th>Status</th><th>Aksi</th></tr></thead>
             <tbody>
-                <tr><td>PR-003</td><td>Renovasi gedung utama</td><td>750.000.000</td><td>WAITING_DIRECTOR</td><td><button style="background:#27ae60; color:white; padding:5px 12px; border:none; border-radius:4px;">Approve</button></td>
-                <tr><td>PR-006</td><td>Kendaraan operasional</td><td>600.000.000</td><td>WAITING_DIRECTOR</td><td><button style="background:#27ae60; color:white; padding:5px 12px; border:none; border-radius:4px;">Approve</button></td>
+                <tr><td>PR-003</td><td>Renovasi gedung utama</td><td>750.000.000</td><td>WAITING_DIRECTOR</td><td><button style="background:#27ae60; color:white; padding:5px 12px; border:none; border-radius:4px;">Approve</button></td></tr>
+                <tr><td>PR-006</td><td>Kendaraan operasional</td><td>600.000.000</td><td>WAITING_DIRECTOR</td><td><button style="background:#27ae60; color:white; padding:5px 12px; border:none; border-radius:4px;">Approve</button></td></tr>
             </tbody>
         </table>
         <p><strong>Catatan:</strong> Tabel di atas adalah contoh statis untuk ilustrasi. Dalam implementasi sebenarnya, data diambil secara dinamis dari API <code>/api/requests/{role}</code>.</p>
@@ -1204,6 +1225,13 @@ java -jar target/procurement-approval-factory-1.0.jar --server.port=8081 &amp; d
 http://13.229.109.30:8081/   <span class="comment"># Ganti dengan Public IP EC2 Anda</span>
         </div>
         <p><strong>Contoh output yang diharapkan:</strong> Halaman web dengan form input pengajuan, dropdown role, dan tabel riwayat approval.</p>
+        
+        <!-- ========== SCREENSHOT DISISIPKAN DI SINI ========== -->
+        <div class="screenshot-container">
+            <img src="workflow-frontend.png" alt="Tampilan Frontend Workflow Approval Berjenjang" style="max-width:100%; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
+            <div class="screenshot-caption">Gambar 8.1 – Tampilan antarmuka web sistem approval pengadaan berjenjang (halaman utama)</div>
+        </div>
+        <!-- ================================================= -->
     </div>
 
     <!-- ==================== BAB 9 – KESIMPULAN ==================== -->
@@ -1212,20 +1240,20 @@ http://13.229.109.30:8081/   <span class="comment"># Ganti dengan Public IP EC2 
     <h3>9.1 Pengujian Alur</h3>
     <table>
         <thead><tr><th>Nominal Pengadaan</th><th>Tahapan</th><th>Status Akhir</th></tr></thead>
-        <tbody><tr><td>30.000.000</code></th><th>Manager approve → selesai</th><th>APPROVED</th>
-        <tr><td>150.000.000</code></th><th>Manager → Kepala Divisi approve</th><th>APPROVED</th>
-        <tr><td>800.000.000</code></th><th>Manager → Kepala Divisi → Direksi approve</th><th>APPROVED</th></tbody>
+        <tbody><tr><td>30.000.000</td><td>Manager approve → selesai</td><td>APPROVED</td></tr>
+        <tr><td>150.000.000</td><td>Manager → Kepala Divisi approve</td><td>APPROVED</td></tr>
+        <tr><td>800.000.000</td><td>Manager → Kepala Divisi → Direksi approve</td><td>APPROVED</td></tr></tbody>
     </table>
     <p>Riwayat approval terekam dan dapat dilihat di tabel "Semua Pengajuan & Riwayat Approval".</p>
 
     <!-- DOWNLOAD -->
     <div style="background: #f4f9f4; border-left: 6px solid #2c6e2f; padding: 20px; margin: 40px 0; border-radius: 12px; text-align: center;">
         <h3>📦 Download Source Code Lengkap</h3>
-        <a href="https://drive.google.com/drive/folders/1j-3eNsAkTfus6FRegJvningI0GZKpprh?usp=sharing" target="_blank" class="download-btn">⬇️ DOWNLOAD SOURCE CODE</a>
+        <a href="https://drive.google.com/drive/folders/1j-3eNsAkTfus6FRegJvningI0GZKpprh?usp=sharing" target="_blank" class="download-btn" style="background:#2c6e2f; color:white; padding:12px 28px; text-decoration:none; border-radius:40px; display:inline-block; font-weight:bold;">⬇️ DOWNLOAD SOURCE CODE</a>
     </div>
 
     <footer>
-        <p>© 2025 – Dimas Kurniawan (25120300016) | Universitas Cakrawala – Fakultas Ilmu Komputer</p>
+        <p>© 2026 – Dimas Kurniawan (25120300016) | Universitas Cakrawala – Fakultas Ilmu Komputer</p>
         <p>🔗 Flowchart: <a href="https://drive.google.com/file/d/1YkRU80UrFipWIcx_P5x_3q2P6B6RmcLs/view?usp=sharing" target="_blank">Lihat Flowchart</a> | 🌐 Live Demo: <a href="http://13.229.109.30:8081" target="_blank">Demo Approval</a></p>
     </footer>
 </div>
