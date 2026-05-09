@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Analisis Kode: pom.xml | Maven & Spring Boot Configuration</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: linear-gradient(145deg, #2d1b3b 0%, #4a2c5e 100%);
+            padding: 2rem;
+            color: #0f172a;
+        }
+
+        .presentation-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #2d1b3b;
+            color: white;
+            padding: 1.5rem 2rem;
+            border-bottom: 4px solid #c084fc;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .header h1 small {
+            font-size: 0.8rem;
+            font-weight: 400;
+            background: #4c2d6e;
+            padding: 0.25rem 0.8rem;
+            border-radius: 40px;
+            color: #e9d5ff;
+        }
+
+        .header p {
+            color: #e9d5ff;
+            margin-top: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .toolbar {
+            padding: 1rem 2rem;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .search-box {
+            flex: 2;
+            min-width: 260px;
+            display: flex;
+            align-items: center;
+            background: white;
+            border: 1px solid #cbd5e1;
+            border-radius: 60px;
+            padding: 0.4rem 1rem;
+            transition: all 0.2s;
+        }
+
+        .search-box:focus-within {
+            border-color: #c084fc;
+            box-shadow: 0 0 0 3px rgba(192,132,252,0.2);
+        }
+
+        .search-box i {
+            color: #64748b;
+            margin-right: 8px;
+            font-style: normal;
+            font-weight: 500;
+        }
+
+        .search-box input {
+            border: none;
+            padding: 0.6rem 0;
+            width: 100%;
+            font-size: 0.95rem;
+            background: transparent;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .stats {
+            background: #f3e8ff;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #6b21a5;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            max-height: 65vh;
+            overflow-y: auto;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .code-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 0.85rem;
+            line-height: 1.45;
+        }
+
+        .code-table th {
+            background: #4a2c6e;
+            color: #f1f5f9;
+            font-weight: 600;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            padding: 1rem 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+
+        .code-table td {
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid #eef2ff;
+            vertical-align: top;
+            background-color: white;
+        }
+
+        .code-table td:first-child, .code-table th:first-child {
+            width: 65px;
+            text-align: center;
+            background-color: #faf5ff;
+            font-weight: 500;
+            color: #5b21b6;
+        }
+        .code-table th:first-child {
+            background-color: #5b3a8c;
+            color: #d8b4fe;
+        }
+
+        .code-table td:nth-child(2) {
+            font-family: 'Courier New', 'JetBrains Mono', monospace;
+            background-color: #fefdf7;
+            word-break: break-word;
+            white-space: pre-wrap;
+        }
+
+        .code-table td:nth-child(3) {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: #ffffff;
+            color: #2d3e5f;
+            line-height: 1.4;
+        }
+
+        .code-table tbody tr:hover td {
+            background-color: #f1f5f9;
+        }
+        .code-table tbody tr:hover td:first-child {
+            background-color: #f3e8ff;
+        }
+
+        .note-pattern {
+            background: #faf5ff;
+            border-left: 6px solid #c084fc;
+            padding: 1rem 2rem;
+            margin: 0;
+            font-size: 0.9rem;
+            color: #3b0764;
+            line-height: 1.5;
+            font-family: 'Segoe UI', system-ui;
+        }
+
+        .footer {
+            padding: 1rem 2rem;
+            background: #f1f5f9;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #475569;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        @media (max-width: 760px) {
+            body {
+                padding: 1rem;
+            }
+            .code-table td, .code-table th {
+                padding: 0.6rem 0.8rem;
+            }
+            .header h1 {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="presentation-container">
+    <div class="header">
+        <h1>
+            📦 pom.xml 
+            <small>Maven Project Object Model</small>
+        </h1>
+        <p>File konfigurasi utama Maven untuk project Spring Boot. Mendefinisikan dependensi, plugin, properti, dan metadata project.</p>
+    </div>
+
+    <div class="toolbar">
+        <div class="search-box">
+            <i>🔍</i>
+            <input type="text" id="searchInput" placeholder="Cari kode atau penjelasan... (contoh: dependency, spring-boot-starter-web, parent)">
+        </div>
+        <div class="stats" id="statsCount">Menampilkan 31 baris</div>
+    </div>
+
+    <div class="table-wrapper">
+        <table class="code-table" id="codeTable">
+            <thead>
+                <tr>
+                    <th>Baris</th>
+                    <th>Kode (source)</th>
+                    <th>Penjelasan & Fungsi</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- Data diisi JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note-pattern">
+        🧩 <strong>Apa itu pom.xml?</strong><br>
+        • <code>pom.xml</code> (Project Object Model) adalah file konfigurasi utama Maven yang mengelola build, dependensi, dan metadata project.<br>
+        • <code>&lt;parent&gt;</code> → Menggunakan <strong>Spring Boot Starter Parent</strong> yang menyediakan manajemen versi default untuk dependensi Spring.<br>
+        • <code>&lt;properties&gt;</code> → Mendefinisikan Java version 11 (sesuai dengan Spring Boot 2.7.0).<br>
+        • <code>&lt;dependencies&gt;</code> → Menambahkan <strong>spring-boot-starter-web</strong> untuk membangun aplikasi web REST (embedded Tomcat, Spring MVC, Jackson).<br>
+        • <code>&lt;build&gt;&lt;plugins&gt;</code> → <strong>spring-boot-maven-plugin</strong> untuk mempackage aplikasi menjadi JAR yang bisa dijalankan (executable JAR) dan menjalankan perintah Maven Spring Boot.<br>
+        • Dengan konfigurasi ini, aplikasi dapat dijalankan dengan <code>mvn spring-boot:run</code> atau <code>java -jar target/procurement-approval-factory-1.0.jar</code>.
+    </div>
+    <div class="footer">
+        ⚙️ Maven | Spring Boot Starter Parent | Dependency spring-boot-starter-web | Plugin untuk executable JAR
+    </div>
+</div>
+
+<script>
+    // Data lengkap berdasarkan file pom.xml (31 baris termasuk deklarasi XML, baris kosong, komentar)
+    const rowsData = [
+        { baris: 1, kode: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>", penjelasan: "Deklarasi XML: versi XML 1.0 dan encoding UTF-8. Wajib untuk file XML." },
+        { baris: 2, kode: "<project xmlns=\"http://maven.apache.org/POM/4.0.0\"", penjelasan: "Elemen root project dengan namespace default Maven POM." },
+        { baris: 3, kode: "         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", penjelasan: "Deklarasi namespace XML Schema Instance untuk validasi." },
+        { baris: 4, kode: "         xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0", penjelasan: "Lokasi file skema XSD untuk validasi struktur POM." },
+        { baris: 5, kode: "         http://maven.apache.org/xsd/maven-4.0.0.xsd\">", penjelasan: "URL skema Maven 4.0.0 (penutup atribut)." },
+        { baris: 6, kode: "    <modelVersion>4.0.0</modelVersion>", penjelasan: "Model versi POM yang digunakan (harus 4.0.0 untuk Maven 2/3)." },
+        { baris: 7, kode: "    <groupId>com.example</groupId>", penjelasan: "Group ID project (identifikasi organisasi/pembuat). Biasanya kebalikan dari domain." },
+        { baris: 8, kode: "    <artifactId>procurement-approval-factory</artifactId>", penjelasan: "Artifact ID: nama unik project (akan menjadi nama JAR/WAR)." },
+        { baris: 9, kode: "    <version>1.0</version>", penjelasan: "Versi project. Kombinasi groupId:artifactId:version membentuk koordinat unik." },
+        { baris: 10, kode: "    <parent>", penjelasan: "Mulai deklarasi parent POM (Spring Boot Starter Parent)." },
+        { baris: 11, kode: "        <groupId>org.springframework.boot</groupId>", penjelasan: "Group ID parent: Spring Boot." },
+        { baris: 12, kode: "        <artifactId>spring-boot-starter-parent</artifactId>", penjelasan: "Artifact ID parent." },
+        { baris: 13, kode: "        <version>2.7.0</version>", penjelasan: "Versi Spring Boot yang digunakan (2.7.0 stabil)." },
+        { baris: 14, kode: "    </parent>", penjelasan: "Penutup parent. Parent ini mengelola versi dependensi secara default." },
+        { baris: 15, kode: "    <properties>", penjelasan: "Bagian properti yang dapat digunakan di seluruh POM." },
+        { baris: 16, kode: "        <java.version>11</java.version>", penjelasan: "Menentukan versi Java yang digunakan (Java 11). Spring Boot 2.7 mendukung Java 8 dan 11." },
+        { baris: 17, kode: "    </properties>", penjelasan: "Penutup properties." },
+        { baris: 18, kode: "    <dependencies>", penjelasan: "Mulai daftar dependensi project." },
+        { baris: 19, kode: "        <dependency>", penjelasan: "Mulai satu dependensi." },
+        { baris: 20, kode: "            <groupId>org.springframework.boot</groupId>", penjelasan: "Group ID dependensi (Spring Boot)." },
+        { baris: 21, kode: "            <artifactId>spring-boot-starter-web</artifactId>", penjelasan: "Spring Boot Web Starter: menyediakan embedded Tomcat, Spring MVC, REST, Jackson." },
+        { baris: 22, kode: "        </dependency>", penjelasan: "Penutup dependensi." },
+        { baris: 23, kode: "    </dependencies>", penjelasan: "Penutup daftar dependensi." },
+        { baris: 24, kode: "    <build>", penjelasan: "Bagian konfigurasi build (plugin, resources, dll)." },
+        { baris: 25, kode: "        <plugins>", penjelasan: "Daftar plugin Maven." },
+        { baris: 26, kode: "            <plugin>", penjelasan: "Mulai konfigurasi plugin." },
+        { baris: 27, kode: "                <groupId>org.springframework.boot</groupId>", penjelasan: "Group ID plugin (Spring Boot)." },
+        { baris: 28, kode: "                <artifactId>spring-boot-maven-plugin</artifactId>", penjelasan: "Plugin Maven untuk Spring Boot: membuat executable JAR, menjalankan aplikasi, dll." },
+        { baris: 29, kode: "            </plugin>", penjelasan: "Penutup plugin." },
+        { baris: 30, kode: "        </plugins>", penjelasan: "Penutup daftar plugins." },
+        { baris: 31, kode: "    </build>", penjelasan: "Penutup build." },
+        { baris: 32, kode: "</project>", penjelasan: "Penutup elemen root project." }
+    ];
+
+    function renderTable(filterText = "") {
+        const tbody = document.getElementById("tableBody");
+        tbody.innerHTML = "";
+        const lowerFilter = filterText.trim().toLowerCase();
+        
+        let filteredRows = rowsData;
+        if (lowerFilter !== "") {
+            filteredRows = rowsData.filter(row => 
+                row.kode.toLowerCase().includes(lowerFilter) || 
+                row.penjelasan.toLowerCase().includes(lowerFilter)
+            );
+        }
+        
+        const statsSpan = document.getElementById("statsCount");
+        statsSpan.textContent = `Menampilkan ${filteredRows.length} dari ${rowsData.length} baris`;
+        
+        if (filteredRows.length === 0) {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `<td colspan="3" style="text-align:center; padding:2rem;">🔎 Tidak ditemukan hasil untuk "${filterText}"</td>`;
+            tbody.appendChild(tr);
+            return;
+        }
+        
+        for (const row of filteredRows) {
+            const tr = document.createElement("tr");
+            const tdBaris = document.createElement("td");
+            tdBaris.textContent = row.baris;
+            const tdKode = document.createElement("td");
+            tdKode.textContent = row.kode === "" ? " " : row.kode;
+            const tdPenjelasan = document.createElement("td");
+            tdPenjelasan.textContent = row.penjelasan;
+            tr.appendChild(tdBaris);
+            tr.appendChild(tdKode);
+            tr.appendChild(tdPenjelasan);
+            tbody.appendChild(tr);
+        }
+    }
+    
+    const searchInput = document.getElementById("searchInput");
+    searchInput.addEventListener("input", (e) => {
+        renderTable(e.target.value);
+    });
+    
+    renderTable();
+</script>
+</body>
+</html>
