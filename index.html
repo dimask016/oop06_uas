@@ -547,23 +547,25 @@ public class ManagerHandler implements ApprovalHandler {
 
     <h3>3.3 Alur Approval Berjenjang dari Manager sampai Direktur</h3>
   <div class="flowchart-modern">
-        <!-- Level 1: Pengajuan -->
+        <!-- Mulai: Pengajuan Baru -->
         <div class="flow-node start-node">
             <div class="node-icon">📝</div>
             <div class="node-title">Pengajuan Baru</div>
             <div class="node-status">Status: WAITING_MANAGER</div>
+            <div class="node-desc">Nominal berapa pun</div>
         </div>
         
         <div class="arrow-down">▼</div>
         
-        <!-- Level 2: Manager -->
+        <!-- Level 1: Manager -->
         <div class="flow-node manager-node">
             <div class="node-icon">👔</div>
             <div class="node-title">Manager Approval</div>
-            <div class="node-desc">Memeriksa nominal pengadaan</div>
+            <div class="node-desc">Memeriksa & menyetujui</div>
             <div class="node-badge">Level 1</div>
         </div>
         
+        <!-- Decision: ≤ 50 juta ? -->
         <div class="decision-diamond">
             <div class="diamond-content">≤ 50.000.000 ?</div>
         </div>
@@ -574,7 +576,7 @@ public class ManagerHandler implements ApprovalHandler {
                 <div class="flow-node end-node">
                     <div class="node-icon">✅</div>
                     <div class="node-title">APPROVED</div>
-                    <div class="node-desc">Selesai</div>
+                    <div class="node-desc">Selesai, tidak perlu level lanjutan</div>
                 </div>
             </div>
             <div class="branch-no">
@@ -588,8 +590,10 @@ public class ManagerHandler implements ApprovalHandler {
             </div>
         </div>
         
+        <!-- Jika sampai ke Kepala Divisi, maka setelah disetujui oleh Kepala Divisi -->
         <div class="arrow-down" style="margin-left: auto; margin-right: auto; width: fit-content;">▼</div>
         
+        <!-- Decision: ≤ 250 juta ? -->
         <div class="decision-diamond">
             <div class="diamond-content">≤ 250.000.000 ?</div>
         </div>
@@ -600,7 +604,7 @@ public class ManagerHandler implements ApprovalHandler {
                 <div class="flow-node end-node">
                     <div class="node-icon">✅</div>
                     <div class="node-title">APPROVED</div>
-                    <div class="node-desc">Selesai</div>
+                    <div class="node-desc">Selesai, disetujui oleh Kepala Divisi</div>
                 </div>
             </div>
             <div class="branch-no">
@@ -614,15 +618,17 @@ public class ManagerHandler implements ApprovalHandler {
             </div>
         </div>
         
+        <!-- Setelah Direksi memberikan persetujuan langsung ke APPROVED -->
         <div class="arrow-down" style="margin-left: auto; margin-right: auto; width: fit-content;">▼</div>
         
         <div class="flow-node end-node final">
             <div class="node-icon">🏁</div>
             <div class="node-title">APPROVED</div>
-            <div class="node-desc">Pengadaan disetujui</div>
-            <div class="node-history">📜 Riwayat terekam otomatis</div>
+            <div class="node-desc">Pengadaan disetujui penuh oleh Direksi</div>
+            <div class="node-history">📜 Riwayat lengkap terekam</div>
         </div>
     </div>
+
 
     <h3>3.4 Keuntungan Penggunaan Kedua Pattern</h3>
     <table style="width:100%; border-collapse: collapse; margin: 20px 0;">
