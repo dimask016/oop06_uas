@@ -201,6 +201,100 @@
             border-radius: 8px;
         }
 
+ /* ========== FLOWCHART CSS MODERN ========== */
+        .flowchart-modern {
+            background: linear-gradient(145deg, #f8fafc 0%, #eef2f8 100%);
+            border-radius: 32px;
+            padding: 30px 25px;
+            margin: 25px 0;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.6);
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+        
+        .flow-node {
+            background: white;
+            border-radius: 20px;
+            padding: 16px 20px;
+            text-align: center;
+            margin: 10px auto;
+            width: 260px;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.05);
+            position: relative;
+        }
+        
+        .flow-node:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 25px -10px rgba(0,0,0,0.15);
+        }
+        
+        .node-icon { font-size: 28px; margin-bottom: 8px; }
+        .node-title { font-weight: bold; font-size: 14pt; margin-bottom: 5px; }
+        .node-desc { font-size: 10pt; color: #4a5568; }
+        .node-status { font-size: 10pt; background: #e2e8f0; display: inline-block; padding: 3px 10px; border-radius: 20px; margin-top: 8px; font-family: monospace; }
+        .node-badge { position: absolute; top: -10px; right: -10px; background: #2c6e2f; color: white; font-size: 9pt; padding: 3px 10px; border-radius: 20px; font-weight: bold; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+        
+        .start-node { border-top: 4px solid #4299e1; }
+        .manager-node { border-top: 4px solid #4299e1; }
+        .division-node { border-top: 4px solid #ed8936; }
+        .director-node { border-top: 4px solid #9f7aea; }
+        .end-node { border-top: 4px solid #48bb78; background: linear-gradient(135deg, #ffffff, #f0fff4); }
+        .final { background: linear-gradient(135deg, #e6fffa, #f0fff4); border-top: 4px solid #38b2ac; }
+        
+        .decision-diamond {
+            width: 140px;
+            height: 140px;
+            margin: 15px auto;
+            background: linear-gradient(145deg, #fef3c7, #fde68a);
+            transform: rotate(45deg);
+            border-radius: 12px;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .decision-diamond:hover {
+            transform: rotate(45deg) scale(1.03);
+            box-shadow: 0 12px 20px -8px rgba(0,0,0,0.2);
+        }
+        
+        .diamond-content {
+            transform: rotate(-45deg);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 11pt;
+            text-align: center;
+            padding: 10px;
+            color: #744210;
+        }
+        
+        .arrow-down { text-align: center; font-size: 24px; color: #4a5568; margin: 8px 0; animation: bounce 1.5s infinite; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); opacity: 0.7; } 50% { transform: translateY(5px); opacity: 1; } }
+        
+        .branch-container { display: flex; justify-content: center; gap: 40px; margin: 15px 0; flex-wrap: wrap; }
+        .branch-yes, .branch-no { display: flex; flex-direction: column; align-items: center; flex: 1; min-width: 200px; }
+        .branch-yes .arrow-right, .branch-no .arrow-right { font-size: 20px; margin-bottom: 8px; font-weight: bold; }
+        .branch-yes .arrow-right { color: #48bb78; }
+        .branch-no .arrow-right { color: #ed8936; }
+        .branch-yes::before { content: "✓ YA"; color: #48bb78; font-weight: bold; font-size: 11pt; margin-bottom: 5px; }
+        .branch-no::before { content: "✗ TIDAK"; color: #ed8936; font-weight: bold; font-size: 11pt; margin-bottom: 5px; }
+        .node-history { font-size: 9pt; color: #718096; margin-top: 8px; padding-top: 8px; border-top: 1px dashed #e2e8f0; }
+        
+        @media (max-width: 768px) {
+            .branch-container { flex-direction: column; align-items: center; gap: 20px; }
+            .flow-node { width: 220px; }
+            .decision-diamond { width: 100px; height: 100px; }
+            .diamond-content { font-size: 9pt; }
+        }
+        
+
+
+
         @media (max-width: 768px) {
             .skripsi-container {
                 padding: 25px 20px;
@@ -417,21 +511,82 @@ public class ManagerHandler implements ApprovalHandler {
     </div>
 
     <h3>3.3 Alur Approval Berjenjang dari Manager sampai Direktur</h3>
-    <div class="flowchart-box">
-        <strong>📊 Alur Lengkap Approval Berjenjang:</strong><br><br>
-        <strong>1. Pengajuan Baru</strong> → Status: <code>WAITING_MANAGER</code><br>
-        ↓<br>
-        <strong>2. Manager Approve</strong> → System > Handler Manager memproses → Update status berdasarkan nominal:<br>
-        &nbsp;&nbsp;&nbsp;- ≤ 50jt → <code>APPROVED</code> (selesai)<br>
-        &nbsp;&nbsp;&nbsp;- > 50jt → <code>WAITING_DIVISION_HEAD</code><br>
-        ↓<br>
-        <strong>3. Kepala Divisi Approve</strong> (jika status <code>WAITING_DIVISION_HEAD</code>) → Update status:<br>
-        &nbsp;&nbsp;&nbsp;- ≤ 250jt → <code>APPROVED</code> (selesai)<br>
-        &nbsp;&nbsp;&nbsp;- > 250jt → <code>WAITING_DIRECTOR</code><br>
-        ↓<br>
-        <strong>4. Direksi Approve</strong> (jika status <code>WAITING_DIRECTOR</code>) → Update status menjadi <code>APPROVED</code> (selesai)<br>
-        ↓<br>
-        <strong>5. Selesai</strong> → Riwayat approval terekam lengkap dengan timestamp
+  <div class="flowchart-modern">
+        <!-- Level 1: Pengajuan -->
+        <div class="flow-node start-node">
+            <div class="node-icon">📝</div>
+            <div class="node-title">Pengajuan Baru</div>
+            <div class="node-status">Status: WAITING_MANAGER</div>
+        </div>
+        
+        <div class="arrow-down">▼</div>
+        
+        <!-- Level 2: Manager -->
+        <div class="flow-node manager-node">
+            <div class="node-icon">👔</div>
+            <div class="node-title">Manager Approval</div>
+            <div class="node-desc">Memeriksa nominal pengadaan</div>
+            <div class="node-badge">Level 1</div>
+        </div>
+        
+        <div class="decision-diamond">
+            <div class="diamond-content">≤ 50.000.000 ?</div>
+        </div>
+        
+        <div class="branch-container">
+            <div class="branch-yes">
+                <div class="arrow-right">→</div>
+                <div class="flow-node end-node">
+                    <div class="node-icon">✅</div>
+                    <div class="node-title">APPROVED</div>
+                    <div class="node-desc">Selesai</div>
+                </div>
+            </div>
+            <div class="branch-no">
+                <div class="arrow-right">→</div>
+                <div class="flow-node division-node">
+                    <div class="node-icon">👨‍💼</div>
+                    <div class="node-title">Kepala Divisi Approval</div>
+                    <div class="node-desc">Status: WAITING_DIVISION_HEAD</div>
+                    <div class="node-badge">Level 2</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="arrow-down" style="margin-left: auto; margin-right: auto; width: fit-content;">▼</div>
+        
+        <div class="decision-diamond">
+            <div class="diamond-content">≤ 250.000.000 ?</div>
+        </div>
+        
+        <div class="branch-container">
+            <div class="branch-yes">
+                <div class="arrow-right">→</div>
+                <div class="flow-node end-node">
+                    <div class="node-icon">✅</div>
+                    <div class="node-title">APPROVED</div>
+                    <div class="node-desc">Selesai</div>
+                </div>
+            </div>
+            <div class="branch-no">
+                <div class="arrow-right">→</div>
+                <div class="flow-node director-node">
+                    <div class="node-icon">👨‍💼⭐</div>
+                    <div class="node-title">Direksi Approval</div>
+                    <div class="node-desc">Status: WAITING_DIRECTOR</div>
+                    <div class="node-badge">Level 3</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="arrow-down" style="margin-left: auto; margin-right: auto; width: fit-content;">▼</div>
+        
+        <div class="flow-node end-node final">
+            <div class="node-icon">🏁</div>
+            <div class="node-title">APPROVED</div>
+            <div class="node-desc">Pengadaan disetujui</div>
+            <div class="node-history">📜 Riwayat terekam otomatis</div>
+        </div>
     </div>
 
     <h3>3.4 Keuntungan Penggunaan Kedua Pattern</h3>
