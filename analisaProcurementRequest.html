@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Analisis Kode: ProcurementRequest.java | Presentasi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: linear-gradient(145deg, #f1f5f9 0%, #e6edf4 100%);
+            padding: 2rem;
+            color: #0f172a;
+        }
+
+        /* Container utama */
+        .presentation-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+
+        /* Header */
+        .header {
+            background: #0f172a;
+            color: white;
+            padding: 1.5rem 2rem;
+            border-bottom: 4px solid #3b82f6;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .header h1 small {
+            font-size: 0.85rem;
+            font-weight: 400;
+            background: #1e293b;
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            color: #94a3b8;
+        }
+
+        .header p {
+            color: #cbd5e1;
+            margin-top: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        /* Toolbar search */
+        .toolbar {
+            padding: 1rem 2rem;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .search-box {
+            flex: 2;
+            min-width: 240px;
+            display: flex;
+            align-items: center;
+            background: white;
+            border: 1px solid #cbd5e1;
+            border-radius: 60px;
+            padding: 0.4rem 1rem;
+            transition: all 0.2s;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        }
+
+        .search-box:focus-within {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
+        }
+
+        .search-box i {
+            color: #64748b;
+            margin-right: 8px;
+            font-weight: 400;
+            font-style: normal;
+            font-size: 1.1rem;
+        }
+
+        .search-box input {
+            border: none;
+            padding: 0.6rem 0;
+            width: 100%;
+            font-size: 0.95rem;
+            background: transparent;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .stats {
+            background: #eef2ff;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #1e40af;
+        }
+
+        /* Tabel wrapper (scroll horizontal & vertikal) */
+        .table-wrapper {
+            overflow-x: auto;
+            max-height: 65vh;
+            overflow-y: auto;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .code-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 0.85rem;
+            line-height: 1.45;
+        }
+
+        .code-table th {
+            background: #1e293b;
+            color: #f1f5f9;
+            font-weight: 600;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            padding: 1rem 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            text-align: left;
+            font-size: 0.85rem;
+            letter-spacing: 0.3px;
+        }
+
+        .code-table td {
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid #eef2ff;
+            vertical-align: top;
+            background-color: white;
+        }
+
+        /* Kolom nomor */
+        .code-table td:first-child, .code-table th:first-child {
+            width: 65px;
+            text-align: center;
+            background-color: #fefce8;
+            font-weight: 500;
+            color: #854d0e;
+        }
+        .code-table th:first-child {
+            background-color: #334155;
+            color: #facc15;
+        }
+
+        /* Kolom kode */
+        .code-table td:nth-child(2) {
+            font-family: 'Courier New', 'JetBrains Mono', monospace;
+            background-color: #fefdf7;
+            word-break: break-word;
+            white-space: pre-wrap;
+            color: #0f172a;
+        }
+
+        /* Kolom penjelasan */
+        .code-table td:nth-child(3) {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: #ffffff;
+            color: #2d3e5f;
+            line-height: 1.4;
+        }
+
+        /* Hover baris */
+        .code-table tbody tr:hover td {
+            background-color: #f1f5f9;
+        }
+        .code-table tbody tr:hover td:first-child {
+            background-color: #fef9c3;
+        }
+
+        /* Highlight kata kunci di kolom kode (opsional) */
+        .keyword {
+            color: #d97706;
+            font-weight: 600;
+        }
+
+        /* Catatan override */
+        .note-override {
+            background: #fffbeb;
+            border-left: 6px solid #f59e0b;
+            padding: 1.2rem 2rem;
+            margin: 0;
+            font-size: 0.9rem;
+            color: #78350f;
+            line-height: 1.5;
+            font-family: 'Segoe UI', system-ui;
+        }
+
+        .footer {
+            padding: 1rem 2rem;
+            background: #f1f5f9;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #475569;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        @media (max-width: 760px) {
+            body {
+                padding: 1rem;
+            }
+            .code-table td, .code-table th {
+                padding: 0.6rem 0.8rem;
+            }
+            .header h1 {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="presentation-container">
+    <div class="header">
+        <h1>
+            📋 ProcurementRequest.java 
+            <small>Analisis per baris</small>
+        </h1>
+        <p>Struktur kelas, enkapsulasi, aturan bisnis approval & inner class ApprovalHistoryEntry</p>
+    </div>
+
+    <div class="toolbar">
+        <div class="search-box">
+            <i>🔍</i>
+            <input type="text" id="searchInput" placeholder="Cari kode atau penjelasan... (misal: private, nextStatusAfter, UUID)">
+        </div>
+        <div class="stats" id="statsCount">Menampilkan 55 baris</div>
+    </div>
+
+    <div class="table-wrapper">
+        <table class="code-table" id="codeTable">
+            <thead>
+                <tr>
+                    <th>Baris</th>
+                    <th>Kode (source)</th>
+                    <th>Penjelasan & Fungsi</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- Data akan diisi oleh JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note-override">
+        📌 <strong>Catatan tentang <code>@override</code> :</strong> Dalam kode ini tidak ada metode yang di-<code>override</code> karena kelas <code>ProcurementRequest</code> tidak mewarisi kelas lain (kecuali <code>Object</code> secara implisit) dan tidak ada metode dari <code>Object</code> yang ditimpa. Jika suatu saat ingin membuat subclass (misal <code>UrgentProcurementRequest</code>) dan mengganti perilaku <code>nextStatusAfter</code>, maka di subclass akan ditambahkan anotasi <code>@Override</code> pada metode yang ditimpa. Anotasi tersebut membantu compiler memeriksa kesalahan.
+    </div>
+    <div class="footer">
+        ⚡ Enkapsulasi dengan private & getter/setter | Aturan bisnis multi-level approval | Inner class static untuk riwayat
+    </div>
+</div>
+
+<script>
+    // Data lengkap berdasarkan tabel yang diberikan (55 baris)
+    const rowsData = [
+        { baris: 1, kode: "package com.example.procurementfactory.model;", penjelasan: "Mendeklarasikan paket untuk mengorganisasi kelas." },
+        { baris: 2, kode: "import java.util.ArrayList;", penjelasan: "Mengimpor ArrayList untuk menyimpan riwayat approval secara dinamis." },
+        { baris: 3, kode: "import java.util.Date;", penjelasan: "Mengimpor Date untuk mencatat timestamp approval." },
+        { baris: 4, kode: "import java.util.List;", penjelasan: "Mengimpor antarmuka List agar atribut approvalHistory bisa lebih fleksibel." },
+        { baris: 5, kode: "import java.util.UUID;", penjelasan: "Mengimpor UUID untuk menghasilkan ID unik secara acak." },
+        { baris: 6, kode: "public class ProcurementRequest {", penjelasan: "Membuka kelas publik ProcurementRequest. public agar kelas dapat diakses dari paket lain." },
+        { baris: 7, kode: "    private String id;", penjelasan: "Atribut private menyimpan ID unik. private → enkapsulasi, hanya diakses lewat getter." },
+        { baris: 8, kode: "    private String description;", penjelasan: "Atribut private deskripsi barang/jasa." },
+        { baris: 9, kode: "    private double amount;", penjelasan: "Atribut private nilai pengadaan dalam Rupiah." },
+        { baris: 10, kode: "    private ApprovalStatus status;", penjelasan: "Status approval saat ini (enum). private untuk menjaga konsistensi." },
+        { baris: 11, kode: "    private List<ApprovalHistoryEntry> approvalHistory;", penjelasan: "Daftar riwayat approval. Tipe List (antarmuka), implementasi konkret di konstruktor." },
+        { baris: 12, kode: "    public ProcurementRequest(String description, double amount) {", penjelasan: "Konstruktor publik (dipanggil dari luar) untuk membuat objek baru." },
+        { baris: 13, kode: "        this.id = UUID.randomUUID().toString().substring(0, 8);", penjelasan: "Menghasilkan UUID, ubah ke string, ambil 8 karakter pertama sebagai ID unik." },
+        { baris: 14, kode: "        this.description = description;", penjelasan: "Mengisi atribut description dari parameter konstruktor." },
+        { baris: 15, kode: "        this.amount = amount;", penjelasan: "Mengisi atribut amount dari parameter." },
+        { baris: 16, kode: "        this.status = ApprovalStatus.WAITING_MANAGER;", penjelasan: "Status awal selalu menunggu persetujuan Manager." },
+        { baris: 17, kode: "        this.approvalHistory = new ArrayList<>();", penjelasan: "Inisialisasi list riwayat dengan ArrayList kosong." },
+        { baris: 18, kode: "    }", penjelasan: "Penutup konstruktor." },
+        { baris: 19, kode: "    public String getId() { return id; }", penjelasan: "Getter publik untuk membaca ID. Tidak ada setter karena ID tidak boleh diubah." },
+        { baris: 20, kode: "    public String getDescription() { return description; }", penjelasan: "Getter publik untuk deskripsi." },
+        { baris: 21, kode: "    public double getAmount() { return amount; }", penjelasan: "Getter publik untuk nilai pengadaan." },
+        { baris: 22, kode: "    public ApprovalStatus getStatus() { return status; }", penjelasan: "Getter publik untuk status saat ini." },
+        { baris: 23, kode: "    public void setStatus(ApprovalStatus status) { this.status = status; }", penjelasan: "Setter publik untuk mengubah status (misal setelah approval)." },
+        { baris: 24, kode: "    public List<ApprovalHistoryEntry> getApprovalHistory() { return approvalHistory; }", penjelasan: "Getter publik untuk riwayat approval. (Catatan: mengembalikan referensi asli, tidak aman untuk modifikasi)" },
+        { baris: 25, kode: "    public void addHistory(String role, String remark) {", penjelasan: "Metode publik menambahkan entri riwayat approval baru." },
+        { baris: 26, kode: "        approvalHistory.add(new ApprovalHistoryEntry(role, remark, new Date()));", penjelasan: "Membuat objek ApprovalHistoryEntry dengan timestamp sekarang dan memasukkannya ke list." },
+        { baris: 27, kode: "    }", penjelasan: "Penutup metode addHistory." },
+        { baris: 28, kode: "    public ApprovalStatus nextStatusAfter(ApprovalStatus current) {", penjelasan: "Metode publik berisi aturan bisnis: menentukan status berikutnya berdasar nominal." },
+        { baris: 29, kode: "        switch (current) {", penjelasan: "Switch berdasarkan status saat ini." },
+        { baris: 30, kode: "            case WAITING_MANAGER:", penjelasan: "Jika status sekarang menunggu Manager." },
+        { baris: 31, kode: "                if (amount <= 50_000_000) return ApprovalStatus.APPROVED;", penjelasan: "≤ 50 juta → langsung APPROVED (tanpa ke level atas)." },
+        { baris: 32, kode: "                else return ApprovalStatus.WAITING_DIVISION_HEAD;", penjelasan: "> 50 juta → lanjut ke Kepala Divisi." },
+        { baris: 33, kode: "            case WAITING_DIVISION_HEAD:", penjelasan: "Jika status menunggu Kepala Divisi." },
+        { baris: 34, kode: "                if (amount <= 250_000_000) return ApprovalStatus.APPROVED;", penjelasan: "≤ 250 juta → APPROVED." },
+        { baris: 35, kode: "                else return ApprovalStatus.WAITING_DIRECTOR;", penjelasan: "> 250 juta → lanjut ke Direktur." },
+        { baris: 36, kode: "            case WAITING_DIRECTOR:", penjelasan: "Jika status menunggu Direktur." },
+        { baris: 37, kode: "                return ApprovalStatus.APPROVED;", penjelasan: "Berapapun nilainya, langsung APPROVED (level tertinggi)." },
+        { baris: 38, kode: "            default:", penjelasan: "Jika status tidak dikenali (misalnya sudah APPROVED)." },
+        { baris: 39, kode: "                return ApprovalStatus.APPROVED;", penjelasan: "Kembalikan APPROVED sebagai status akhir." },
+        { baris: 40, kode: "        }", penjelasan: "Penutup switch." },
+        { baris: 41, kode: "    }", penjelasan: "Penutup metode nextStatusAfter." },
+        { baris: 42, kode: "    public static class ApprovalHistoryEntry {", penjelasan: "Inner class statis (tidak terikat ke instance luar) untuk merekam satu entri riwayat. static karena tidak perlu akses ke atribut ProcurementRequest. public agar bisa digunakan di luar." },
+        { baris: 43, kode: "        private String role;", penjelasan: "Peran approver (Manager, Direktur, dll). private untuk enkapsulasi." },
+        { baris: 44, kode: "        private String remark;", penjelasan: "Catatan atau komentar saat approval." },
+        { baris: 45, kode: "        private Date timestamp;", penjelasan: "Waktu approval terjadi." },
+        { baris: 46, kode: "        public ApprovalHistoryEntry(String role, String remark, Date timestamp) {", penjelasan: "Konstruktor publik untuk membuat entri riwayat." },
+        { baris: 47, kode: "            this.role = role;", penjelasan: "Mengisi atribut role." },
+        { baris: 48, kode: "            this.remark = remark;", penjelasan: "Mengisi remark." },
+        { baris: 49, kode: "            this.timestamp = timestamp;", penjelasan: "Mengisi timestamp." },
+        { baris: 50, kode: "        }", penjelasan: "Penutup konstruktor." },
+        { baris: 51, kode: "        public String getRole() { return role; }", penjelasan: "Getter publik untuk role." },
+        { baris: 52, kode: "        public String getRemark() { return remark; }", penjelasan: "Getter publik untuk remark." },
+        { baris: 53, kode: "        public Date getTimestamp() { return timestamp; }", penjelasan: "Getter publik untuk timestamp. (Tidak ada setter karena data riwayat bersifat immutable setelah dibuat)" },
+        { baris: 54, kode: "    }", penjelasan: "Penutup kelas ApprovalHistoryEntry." },
+        { baris: 55, kode: "}", penjelasan: "Penutup kelas ProcurementRequest." }
+    ];
+
+    // Fungsi render berdasarkan filter
+    function renderTable(filterText = "") {
+        const tbody = document.getElementById("tableBody");
+        tbody.innerHTML = "";
+        const lowerFilter = filterText.toLowerCase();
+        
+        let filteredRows = rowsData;
+        if (filterText.trim() !== "") {
+            filteredRows = rowsData.filter(row => 
+                row.kode.toLowerCase().includes(lowerFilter) || 
+                row.penjelasan.toLowerCase().includes(lowerFilter)
+            );
+        }
+        
+        // update statistik
+        const statsSpan = document.getElementById("statsCount");
+        statsSpan.textContent = `Menampilkan ${filteredRows.length} dari ${rowsData.length} baris`;
+        
+        if (filteredRows.length === 0) {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `<td colspan="3" style="text-align:center; padding:2rem;">✨ Tidak ditemukan hasil untuk "${filterText}" ✨</td>`;
+            tbody.appendChild(tr);
+            return;
+        }
+        
+        for (const row of filteredRows) {
+            const tr = document.createElement("tr");
+            // Baris
+            const tdBaris = document.createElement("td");
+            tdBaris.textContent = row.baris;
+            // Kode (monospace)
+            const tdKode = document.createElement("td");
+            tdKode.textContent = row.kode;
+            // Penjelasan
+            const tdPenjelasan = document.createElement("td");
+            tdPenjelasan.textContent = row.penjelasan;
+            
+            tr.appendChild(tdBaris);
+            tr.appendChild(tdKode);
+            tr.appendChild(tdPenjelasan);
+            tbody.appendChild(tr);
+        }
+    }
+    
+    // Event listener search
+    const searchInput = document.getElementById("searchInput");
+    searchInput.addEventListener("input", (e) => {
+        renderTable(e.target.value);
+    });
+    
+    // Render awal
+    renderTable();
+    
+    // Optional: tambahkan highlight sederhana untuk kata kunci (tidak wajib, tapi membantu)
+    // Koreksi sedikit styling: agar kolom kode lebih rapi
+    // Sudah OK.
+</script>
+</body>
+</html>

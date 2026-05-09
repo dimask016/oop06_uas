@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Analisis Kode: ProcurementApplication.java | Spring Boot Main Class</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: linear-gradient(145deg, #0f2e1f 0%, #1b4d2e 100%);
+            padding: 2rem;
+            color: #0f172a;
+        }
+
+        .presentation-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #0f2e1f;
+            color: white;
+            padding: 1.5rem 2rem;
+            border-bottom: 4px solid #22c55e;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .header h1 small {
+            font-size: 0.8rem;
+            font-weight: 400;
+            background: #2d6a4f;
+            padding: 0.25rem 0.8rem;
+            border-radius: 40px;
+            color: #bbf7d0;
+        }
+
+        .header p {
+            color: #bbf7d0;
+            margin-top: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .toolbar {
+            padding: 1rem 2rem;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .search-box {
+            flex: 2;
+            min-width: 260px;
+            display: flex;
+            align-items: center;
+            background: white;
+            border: 1px solid #cbd5e1;
+            border-radius: 60px;
+            padding: 0.4rem 1rem;
+            transition: all 0.2s;
+        }
+
+        .search-box:focus-within {
+            border-color: #22c55e;
+            box-shadow: 0 0 0 3px rgba(34,197,94,0.2);
+        }
+
+        .search-box i {
+            color: #64748b;
+            margin-right: 8px;
+            font-style: normal;
+            font-weight: 500;
+        }
+
+        .search-box input {
+            border: none;
+            padding: 0.6rem 0;
+            width: 100%;
+            font-size: 0.95rem;
+            background: transparent;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .stats {
+            background: #dcfce7;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #166534;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            max-height: 65vh;
+            overflow-y: auto;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .code-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 0.85rem;
+            line-height: 1.45;
+        }
+
+        .code-table th {
+            background: #2d6a4f;
+            color: #f1f5f9;
+            font-weight: 600;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            padding: 1rem 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+
+        .code-table td {
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid #eef2ff;
+            vertical-align: top;
+            background-color: white;
+        }
+
+        .code-table td:first-child, .code-table th:first-child {
+            width: 65px;
+            text-align: center;
+            background-color: #f0fdf4;
+            font-weight: 500;
+            color: #166534;
+        }
+        .code-table th:first-child {
+            background-color: #3b8262;
+            color: #bbf7d0;
+        }
+
+        .code-table td:nth-child(2) {
+            font-family: 'Courier New', 'JetBrains Mono', monospace;
+            background-color: #fefdf7;
+            word-break: break-word;
+            white-space: pre-wrap;
+        }
+
+        .code-table td:nth-child(3) {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: #ffffff;
+            color: #2d3e5f;
+            line-height: 1.4;
+        }
+
+        .code-table tbody tr:hover td {
+            background-color: #f1f5f9;
+        }
+        .code-table tbody tr:hover td:first-child {
+            background-color: #dcfce7;
+        }
+
+        .note-springboot {
+            background: #f0fdf4;
+            border-left: 6px solid #22c55e;
+            padding: 1rem 2rem;
+            margin: 0;
+            font-size: 0.9rem;
+            color: #14532d;
+            line-height: 1.5;
+            font-family: 'Segoe UI', system-ui;
+        }
+
+        .footer {
+            padding: 1rem 2rem;
+            background: #f1f5f9;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #475569;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        @media (max-width: 760px) {
+            body {
+                padding: 1rem;
+            }
+            .code-table td, .code-table th {
+                padding: 0.6rem 0.8rem;
+            }
+            .header h1 {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="presentation-container">
+    <div class="header">
+        <h1>
+            🚀 ProcurementApplication.java 
+            <small>Spring Boot Main Class</small>
+        </h1>
+        <p>Kelas utama untuk menjalankan aplikasi Spring Boot Procurement Factory. Bertanggung jawab untuk mem-bootstrap aplikasi dan menjalankan embedded server.</p>
+    </div>
+
+    <div class="toolbar">
+        <div class="search-box">
+            <i>🔍</i>
+            <input type="text" id="searchInput" placeholder="Cari kode atau penjelasan... (contoh: @SpringBootApplication, main, SpringApplication.run)">
+        </div>
+        <div class="stats" id="statsCount">Menampilkan 11 baris</div>
+    </div>
+
+    <div class="table-wrapper">
+        <table class="code-table" id="codeTable">
+            <thead>
+                <tr>
+                    <th>Baris</th>
+                    <th>Kode (source)</th>
+                    <th>Penjelasan & Fungsi</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- Data diisi JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note-springboot">
+        🧩 <strong>Apa yang dilakukan @SpringBootApplication?</strong><br>
+        • Anotasi <code>@SpringBootApplication</code> adalah gabungan dari tiga anotasi Spring:<br>
+        &nbsp;&nbsp;🔹 <code>@Configuration</code> – menandai kelas sebagai sumber definisi bean.<br>
+        &nbsp;&nbsp;🔹 <code>@EnableAutoConfiguration</code> – mengaktifkan auto-configuration Spring Boot (mengkonfigurasi bean berdasarkan dependensi yang ada di classpath).<br>
+        &nbsp;&nbsp;🔹 <code>@ComponentScan</code> – memindai package dan sub-package untuk menemukan komponen Spring (Controller, Service, Repository, dll).<br>
+        • Method <code>main</code> adalah entry point Java standar. <code>SpringApplication.run()</code> akan:<br>
+        &nbsp;&nbsp;→ Memulai embedded web server (Tomcat/Jetty/Undertow)<br>
+        &nbsp;&nbsp;→ Membuat Spring IoC container<br>
+        &nbsp;&nbsp;→ Melakukan auto-configuration dan component scanning<br>
+        &nbsp;&nbsp;→ Menjalankan aplikasi hingga server dimatikan.<br>
+        • Dengan struktur package <code>com.example.procurementfactory</code>, anotasi ini akan memindai semua sub-package (controller, service, handler, model) secara otomatis.
+    </div>
+    <div class="footer">
+        🍃 Spring Boot | @SpringBootApplication | Entry point aplikasi | Embedded server
+    </div>
+</div>
+
+<script>
+    // Data lengkap berdasarkan file ProcurementApplication.java (11 baris termasuk baris kosong)
+    const rowsData = [
+        { baris: 1, kode: "package com.example.procurementfactory;", penjelasan: "Mendeklarasikan paket root aplikasi. Semua kelas lain berada di sub-package (model, controller, service, handler)." },
+        { baris: 2, kode: "", penjelasan: "Baris kosong." },
+        { baris: 3, kode: "import org.springframework.boot.SpringApplication;", penjelasan: "Mengimpor kelas SpringApplication yang menyediakan method run() untuk mem-bootstrap aplikasi Spring Boot." },
+        { baris: 4, kode: "import org.springframework.boot.autoconfigure.SpringBootApplication;", penjelasan: "Mengimpor anotasi @SpringBootApplication, anotasi paling penting dalam Spring Boot." },
+        { baris: 5, kode: "", penjelasan: "Baris kosong." },
+        { baris: 6, kode: "@SpringBootApplication", penjelasan: "Anotasi yang menandai kelas ini sebagai konfigurasi utama Spring Boot. Juga mengaktifkan auto-configuration dan component scanning." },
+        { baris: 7, kode: "public class ProcurementApplication {", penjelasan: "Deklarasi kelas publik ProcurementApplication. Kelas ini tidak perlu diinstansiasi karena hanya berisi method static main." },
+        { baris: 8, kode: "    public static void main(String[] args) {", penjelasan: "Method main: entry point standar Java. 'public' agar JVM dapat mengaksesnya, 'static' agar dapat dipanggil tanpa instance, 'void' tidak mengembalikan nilai." },
+        { baris: 9, kode: "        SpringApplication.run(ProcurementApplication.class, args);", penjelasan: "Memanggil method run dari SpringApplication. Parameter pertama adalah kelas konfigurasi utama (current class), parameter kedua adalah argumen command line. Method ini akan memulai seluruh aplikasi Spring Boot." },
+        { baris: 10, kode: "    }", penjelasan: "Penutup method main." },
+        { baris: 11, kode: "}", penjelasan: "Penutup kelas ProcurementApplication." }
+    ];
+
+    function renderTable(filterText = "") {
+        const tbody = document.getElementById("tableBody");
+        tbody.innerHTML = "";
+        const lowerFilter = filterText.trim().toLowerCase();
+        
+        let filteredRows = rowsData;
+        if (lowerFilter !== "") {
+            filteredRows = rowsData.filter(row => 
+                row.kode.toLowerCase().includes(lowerFilter) || 
+                row.penjelasan.toLowerCase().includes(lowerFilter)
+            );
+        }
+        
+        const statsSpan = document.getElementById("statsCount");
+        statsSpan.textContent = `Menampilkan ${filteredRows.length} dari ${rowsData.length} baris`;
+        
+        if (filteredRows.length === 0) {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `<td colspan="3" style="text-align:center; padding:2rem;">🔎 Tidak ditemukan hasil untuk "${filterText}"</td>`;
+            tbody.appendChild(tr);
+            return;
+        }
+        
+        for (const row of filteredRows) {
+            const tr = document.createElement("tr");
+            const tdBaris = document.createElement("td");
+            tdBaris.textContent = row.baris;
+            const tdKode = document.createElement("td");
+            tdKode.textContent = row.kode === "" ? " " : row.kode;
+            const tdPenjelasan = document.createElement("td");
+            tdPenjelasan.textContent = row.penjelasan;
+            tr.appendChild(tdBaris);
+            tr.appendChild(tdKode);
+            tr.appendChild(tdPenjelasan);
+            tbody.appendChild(tr);
+        }
+    }
+    
+    const searchInput = document.getElementById("searchInput");
+    searchInput.addEventListener("input", (e) => {
+        renderTable(e.target.value);
+    });
+    
+    renderTable();
+</script>
+</body>
+</html>
