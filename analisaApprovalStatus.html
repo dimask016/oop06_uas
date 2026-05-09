@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Analisis Kode: ApprovalStatus.java | Enum Status Approval</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: linear-gradient(145deg, #0c4a6e 0%, #075985 100%);
+            padding: 2rem;
+            color: #0f172a;
+        }
+
+        .presentation-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #0c4a6e;
+            color: white;
+            padding: 1.5rem 2rem;
+            border-bottom: 4px solid #38bdf8;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .header h1 small {
+            font-size: 0.8rem;
+            font-weight: 400;
+            background: #1e6f9f;
+            padding: 0.25rem 0.8rem;
+            border-radius: 40px;
+            color: #bae6fd;
+        }
+
+        .header p {
+            color: #bae6fd;
+            margin-top: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .toolbar {
+            padding: 1rem 2rem;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .search-box {
+            flex: 2;
+            min-width: 260px;
+            display: flex;
+            align-items: center;
+            background: white;
+            border: 1px solid #cbd5e1;
+            border-radius: 60px;
+            padding: 0.4rem 1rem;
+            transition: all 0.2s;
+        }
+
+        .search-box:focus-within {
+            border-color: #38bdf8;
+            box-shadow: 0 0 0 3px rgba(56,189,248,0.2);
+        }
+
+        .search-box i {
+            color: #64748b;
+            margin-right: 8px;
+            font-style: normal;
+            font-weight: 500;
+        }
+
+        .search-box input {
+            border: none;
+            padding: 0.6rem 0;
+            width: 100%;
+            font-size: 0.95rem;
+            background: transparent;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .stats {
+            background: #e0f2fe;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #0369a1;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            max-height: 65vh;
+            overflow-y: auto;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .code-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 0.85rem;
+            line-height: 1.45;
+        }
+
+        .code-table th {
+            background: #1e5a7a;
+            color: #f1f5f9;
+            font-weight: 600;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            padding: 1rem 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+
+        .code-table td {
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid #eef2ff;
+            vertical-align: top;
+            background-color: white;
+        }
+
+        .code-table td:first-child, .code-table th:first-child {
+            width: 65px;
+            text-align: center;
+            background-color: #f0f9ff;
+            font-weight: 500;
+            color: #0369a1;
+        }
+        .code-table th:first-child {
+            background-color: #2c6d8f;
+            color: #bae6fd;
+        }
+
+        .code-table td:nth-child(2) {
+            font-family: 'Courier New', 'JetBrains Mono', monospace;
+            background-color: #fefdf7;
+            word-break: break-word;
+            white-space: pre-wrap;
+        }
+
+        .code-table td:nth-child(3) {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: #ffffff;
+            color: #2d3e5f;
+            line-height: 1.4;
+        }
+
+        .code-table tbody tr:hover td {
+            background-color: #f1f5f9;
+        }
+        .code-table tbody tr:hover td:first-child {
+            background-color: #e0f2fe;
+        }
+
+        .note-enum {
+            background: #f0f9ff;
+            border-left: 6px solid #38bdf8;
+            padding: 1rem 2rem;
+            margin: 0;
+            font-size: 0.9rem;
+            color: #0c4a6e;
+            line-height: 1.5;
+            font-family: 'Segoe UI', system-ui;
+        }
+
+        .footer {
+            padding: 1rem 2rem;
+            background: #f1f5f9;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #475569;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        @media (max-width: 760px) {
+            body {
+                padding: 1rem;
+            }
+            .code-table td, .code-table th {
+                padding: 0.6rem 0.8rem;
+            }
+            .header h1 {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="presentation-container">
+    <div class="header">
+        <h1>
+            🚦 ApprovalStatus.java 
+            <small>Enum – Status Persetujuan</small>
+        </h1>
+        <p>Mendefinisikan status yang mungkin dilalui oleh sebuah ProcurementRequest selama proses approval multi-level.</p>
+    </div>
+
+    <div class="toolbar">
+        <div class="search-box">
+            <i>🔍</i>
+            <input type="text" id="searchInput" placeholder="Cari kode atau penjelasan... (contoh: enum, WAITING_MANAGER, APPROVED)">
+        </div>
+        <div class="stats" id="statsCount">Menampilkan 10 baris</div>
+    </div>
+
+    <div class="table-wrapper">
+        <table class="code-table" id="codeTable">
+            <thead>
+                <tr>
+                    <th>Baris</th>
+                    <th>Kode (source)</th>
+                    <th>Penjelasan & Fungsi</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- Data diisi JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note-enum">
+        🧩 <strong>Mengapa menggunakan Enum?</strong><br>
+        • <code>enum</code> di Java digunakan untuk merepresentasikan sekumpulan konstanta yang tetap dan terbatas.<br>
+        • Keuntungan: type-safe (tidak bisa menggunakan nilai di luar yang didefinisikan), mudah dibaca, dan dapat digunakan dalam switch statement.<br>
+        • <strong>Alur status:</strong><br>
+        &nbsp;&nbsp;1️⃣ <code>WAITING_MANAGER</code> → status awal setelah pengajuan dibuat.<br>
+        &nbsp;&nbsp;2️⃣ <code>WAITING_DIVISION_HEAD</code> → jika nominal > 50jt, request naik ke kepala divisi.<br>
+        &nbsp;&nbsp;3️⃣ <code>WAITING_DIRECTOR</code> → jika nominal > 250jt, request naik ke direktur.<br>
+        &nbsp;&nbsp;4️⃣ <code>APPROVED</code> → status akhir setelah disetujui sepenuhnya.<br>
+        • Enum ini digunakan di seluruh sistem: di <code>ProcurementRequest</code> sebagai field <code>status</code>, di setiap <code>Handler</code> untuk pengecekan kondisi, dan di <code>nextStatusAfter()</code> untuk menentukan transisi.
+    </div>
+    <div class="footer">
+        📌 Enum dengan 4 nilai konstanta | Type-safe | Digunakan dalam model, handler, dan aturan bisnis
+    </div>
+</div>
+
+<script>
+    // Data lengkap berdasarkan file ApprovalStatus.java (10 baris termasuk baris kosong)
+    const rowsData = [
+        { baris: 1, kode: "package com.example.procurementfactory.model;", penjelasan: "Mendeklarasikan paket model, tempat kelas-kelas data (entity) disimpan." },
+        { baris: 2, kode: "", penjelasan: "Baris kosong (pemisah antara package dan deklarasi enum)." },
+        { baris: 3, kode: "public enum ApprovalStatus {", penjelasan: "Deklarasi enum publik bernama ApprovalStatus. 'public' agar dapat diakses dari seluruh paket dalam aplikasi. 'enum' menunjukkan bahwa ini adalah tipe enumerasi." },
+        { baris: 4, kode: "    WAITING_MANAGER,", penjelasan: "Konstanta enum: status menunggu persetujuan dari Manager. Ini adalah status awal setiap pengajuan baru (dilihat dari konstruktor ProcurementRequest)." },
+        { baris: 5, kode: "    WAITING_DIVISION_HEAD,", penjelasan: "Konstanta enum: status menunggu persetujuan dari Kepala Divisi. Dicapai ketika nominal > 50 juta Rupiah setelah approval Manager." },
+        { baris: 6, kode: "    WAITING_DIRECTOR,", penjelasan: "Konstanta enum: status menunggu persetujuan dari Direktur. Dicapai ketika nominal > 250 juta Rupiah setelah approval Kepala Divisi." },
+        { baris: 7, kode: "    APPROVED", penjelasan: "Konstanta enum: status akhir yang menandakan pengajuan telah disetujui sepenuhnya. Tidak ada status REJECTED dalam versi sederhana ini." },
+        { baris: 8, kode: "}", penjelasan: "Penutup enum ApprovalStatus." },
+        { baris: 9, kode: "", penjelasan: "Baris kosong (opsional)." },
+        { baris: 10, kode: "// Catatan: Urutan konstanta dapat digunakan untuk perbandingan ordinal()", penjelasan: "Komentar tambahan: enum memiliki method ordinal() yang mengembalikan urutan indeks (0,1,2,3). Namun praktik terbaik adalah menggunakan nilai konstanta, bukan ordinal, karena rawan kesalahan jika urutan berubah." }
+    ];
+
+    function renderTable(filterText = "") {
+        const tbody = document.getElementById("tableBody");
+        tbody.innerHTML = "";
+        const lowerFilter = filterText.trim().toLowerCase();
+        
+        let filteredRows = rowsData;
+        if (lowerFilter !== "") {
+            filteredRows = rowsData.filter(row => 
+                row.kode.toLowerCase().includes(lowerFilter) || 
+                row.penjelasan.toLowerCase().includes(lowerFilter)
+            );
+        }
+        
+        const statsSpan = document.getElementById("statsCount");
+        statsSpan.textContent = `Menampilkan ${filteredRows.length} dari ${rowsData.length} baris`;
+        
+        if (filteredRows.length === 0) {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `<td colspan="3" style="text-align:center; padding:2rem;">🔎 Tidak ditemukan hasil untuk "${filterText}"</td>`;
+            tbody.appendChild(tr);
+            return;
+        }
+        
+        for (const row of filteredRows) {
+            const tr = document.createElement("tr");
+            const tdBaris = document.createElement("td");
+            tdBaris.textContent = row.baris;
+            const tdKode = document.createElement("td");
+            tdKode.textContent = row.kode === "" ? " " : row.kode;
+            const tdPenjelasan = document.createElement("td");
+            tdPenjelasan.textContent = row.penjelasan;
+            tr.appendChild(tdBaris);
+            tr.appendChild(tdKode);
+            tr.appendChild(tdPenjelasan);
+            tbody.appendChild(tr);
+        }
+    }
+    
+    const searchInput = document.getElementById("searchInput");
+    searchInput.addEventListener("input", (e) => {
+        renderTable(e.target.value);
+    });
+    
+    renderTable();
+</script>
+</body>
+</html>

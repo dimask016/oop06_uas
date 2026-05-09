@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Analisis Kode: DivisionHeadHandler.java | Chain of Responsibility - Kepala Divisi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: linear-gradient(145deg, #1e3a5f 0%, #2c5282 100%);
+            padding: 2rem;
+            color: #0f172a;
+        }
+
+        .presentation-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #1e3a5f;
+            color: white;
+            padding: 1.5rem 2rem;
+            border-bottom: 4px solid #3b82f6;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .header h1 small {
+            font-size: 0.8rem;
+            font-weight: 400;
+            background: #2c5282;
+            padding: 0.25rem 0.8rem;
+            border-radius: 40px;
+            color: #bfdbfe;
+        }
+
+        .header p {
+            color: #bfdbfe;
+            margin-top: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .toolbar {
+            padding: 1rem 2rem;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .search-box {
+            flex: 2;
+            min-width: 260px;
+            display: flex;
+            align-items: center;
+            background: white;
+            border: 1px solid #cbd5e1;
+            border-radius: 60px;
+            padding: 0.4rem 1rem;
+            transition: all 0.2s;
+        }
+
+        .search-box:focus-within {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
+        }
+
+        .search-box i {
+            color: #64748b;
+            margin-right: 8px;
+            font-style: normal;
+            font-weight: 500;
+        }
+
+        .search-box input {
+            border: none;
+            padding: 0.6rem 0;
+            width: 100%;
+            font-size: 0.95rem;
+            background: transparent;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .stats {
+            background: #dbeafe;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #1e40af;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            max-height: 65vh;
+            overflow-y: auto;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .code-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 0.85rem;
+            line-height: 1.45;
+        }
+
+        .code-table th {
+            background: #334155;
+            color: #f1f5f9;
+            font-weight: 600;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            padding: 1rem 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+
+        .code-table td {
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid #eef2ff;
+            vertical-align: top;
+            background-color: white;
+        }
+
+        .code-table td:first-child, .code-table th:first-child {
+            width: 65px;
+            text-align: center;
+            background-color: #eff6ff;
+            font-weight: 500;
+            color: #1e3a8a;
+        }
+        .code-table th:first-child {
+            background-color: #475569;
+            color: #93c5fd;
+        }
+
+        .code-table td:nth-child(2) {
+            font-family: 'Courier New', 'JetBrains Mono', monospace;
+            background-color: #fefdf7;
+            word-break: break-word;
+            white-space: pre-wrap;
+        }
+
+        .code-table td:nth-child(3) {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: #ffffff;
+            color: #2d3e5f;
+            line-height: 1.4;
+        }
+
+        .code-table tbody tr:hover td {
+            background-color: #f1f5f9;
+        }
+        .code-table tbody tr:hover td:first-child {
+            background-color: #dbeafe;
+        }
+
+        .note-pattern {
+            background: #eff6ff;
+            border-left: 6px solid #3b82f6;
+            padding: 1rem 2rem;
+            margin: 0;
+            font-size: 0.9rem;
+            color: #1e3a8a;
+            line-height: 1.5;
+            font-family: 'Segoe UI', system-ui;
+        }
+
+        .footer {
+            padding: 1rem 2rem;
+            background: #f1f5f9;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #475569;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        @media (max-width: 760px) {
+            body {
+                padding: 1rem;
+            }
+            .code-table td, .code-table th {
+                padding: 0.6rem 0.8rem;
+            }
+            .header h1 {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="presentation-container">
+    <div class="header">
+        <h1>
+            📋 DivisionHeadHandler.java 
+            <small>Concrete Handler – Chain of Responsibility</small>
+        </h1>
+        <p>Handler konkret untuk level Kepala Divisi. Memproses request yang statusnya WAITING_DIVISION_HEAD, mencatat riwayat, mengubah status berdasarkan aturan bisnis (≤250jt → APPROVED, >250jt → WAITING_DIRECTOR), lalu menghentikan atau meneruskan ke handler berikutnya.</p>
+    </div>
+
+    <div class="toolbar">
+        <div class="search-box">
+            <i>🔍</i>
+            <input type="text" id="searchInput" placeholder="Cari kode atau penjelasan... (contoh: @Override, handle, setNext, WAITING_DIVISION_HEAD)">
+        </div>
+        <div class="stats" id="statsCount">Menampilkan 21 baris</div>
+    </div>
+
+    <div class="table-wrapper">
+        <table class="code-table" id="codeTable">
+            <thead>
+                <tr>
+                    <th>Baris</th>
+                    <th>Kode (source)</th>
+                    <th>Penjelasan & Fungsi</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- Data diisi JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note-pattern">
+        🧩 <strong>Analisis DivisionHeadHandler dalam Chain of Responsibility</strong><br>
+        • Kelas ini mengimplementasikan interface <code>ApprovalHandler</code> dan me-<code>override</code> method <code>handle()</code> dan <code>setNext()</code>.<br>
+        • <strong>Aturan bisnis:</strong> Menangani request dengan status <code>WAITING_DIVISION_HEAD</code>. Setelah approval, memanggil <code>nextStatusAfter(WAITING_DIVISION_HEAD)</code> yang mengembalikan:<br>
+        &nbsp;&nbsp;→ <code>APPROVED</code> jika nominal ≤ 250 juta<br>
+        &nbsp;&nbsp;→ <code>WAITING_DIRECTOR</code> jika nominal > 250 juta<br>
+        • Setelah mengubah status, handler <strong>tidak</strong> secara otomatis memanggil <code>next.handle()</code> karena status sudah berubah menjadi APPROVED atau WAITING_DIRECTOR. Namun, jika status menjadi WAITING_DIRECTOR, maka secara arsitektur seharusnya ada handler lain (DirectorHandler) yang akan menangani nanti (misal melalui pemanggilan ulang dari client atau sistem). Dalam implementasi ini, DivisionHeadHandler berhenti dan tidak meneruskan ke next secara otomatis.<br>
+        • Jika status tidak sesuai, dan ada handler berikutnya, maka request diteruskan.
+    </div>
+    <div class="footer">
+        ✅ Implementasi Chain of Responsibility | Mencatat riwayat | Logika transisi status berdasarkan nominal
+    </div>
+</div>
+
+<script>
+    // Data lengkap berdasarkan file DivisionHeadHandler.java (21 baris termasuk baris kosong)
+    const rowsData = [
+        { baris: 1, kode: "package com.example.procurementfactory.handler;", penjelasan: "Mendeklarasikan paket handler, tempat semua kelas handler approval." },
+        { baris: 2, kode: "", penjelasan: "Baris kosong." },
+        { baris: 3, kode: "import com.example.procurementfactory.model.ProcurementRequest;", penjelasan: "Mengimpor kelas ProcurementRequest untuk mengakses data pengajuan (status, amount, description)." },
+        { baris: 4, kode: "import com.example.procurementfactory.model.ApprovalStatus;", penjelasan: "Mengimpor enum ApprovalStatus untuk membandingkan status seperti WAITING_DIVISION_HEAD." },
+        { baris: 5, kode: "", penjelasan: "Baris kosong." },
+        { baris: 6, kode: "public class DivisionHeadHandler implements ApprovalHandler {", penjelasan: "Deklarasi kelas publik DivisionHeadHandler yang mengimplementasikan interface ApprovalHandler. Wajib menyediakan implementasi handle() dan setNext()." },
+        { baris: 7, kode: "    private ApprovalHandler next;", penjelasan: "Atribut private untuk menyimpan referensi handler berikutnya dalam rantai." },
+        { baris: 8, kode: "", penjelasan: "Baris kosong." },
+        { baris: 9, kode: "    @Override", penjelasan: "Anotasi yang menandakan bahwa method berikut meng-override method dari interface. Membantu compiler mendeteksi kesalahan." },
+        { baris: 10, kode: "    public void setNext(ApprovalHandler next) {", penjelasan: "Implementasi method setNext dari interface. Menerima handler berikutnya dan menyimpannya." },
+        { baris: 11, kode: "        this.next = next;", penjelasan: "Menyimpan handler next ke field kelas." },
+        { baris: 12, kode: "    }", penjelasan: "Penutup method setNext." },
+        { baris: 13, kode: "", penjelasan: "Baris kosong." },
+        { baris: 14, kode: "    @Override", penjelasan: "Anotasi override untuk method handle." },
+        { baris: 15, kode: "    public void handle(ProcurementRequest request) {", penjelasan: "Implementasi method handle untuk memproses request approval." },
+        { baris: 16, kode: "        if (request.getStatus() == ApprovalStatus.WAITING_DIVISION_HEAD) {", penjelasan: "Cek apakah status request sedang WAITING_DIVISION_HEAD. Hanya jika ya, handler ini memproses." },
+        { baris: 17, kode: "            request.addHistory(\"DIVISION_HEAD\", \"Kepala Divisi menyetujui (nominal: \" + request.getAmount() + \")\");", penjelasan: "Menambahkan entri riwayat approval dengan peran DIVISION_HEAD dan pesan berisi nominal. addHistory mengisi timestamp otomatis." },
+        { baris: 18, kode: "            System.out.println(\"✅ Kepala Divisi approve: \" + request.getDescription());", penjelasan: "Mencetak log ke konsol untuk debugging/monitoring." },
+        { baris: 19, kode: "", penjelasan: "Baris kosong." },
+        { baris: 20, kode: "            ApprovalStatus newStatus = request.nextStatusAfter(ApprovalStatus.WAITING_DIVISION_HEAD);", penjelasan: "Memanggil method nextStatusAfter dengan status WAITING_DIVISION_HEAD. Berdasarkan aturan bisnis: ≤250jt → APPROVED; >250jt → WAITING_DIRECTOR." },
+        { baris: 21, kode: "            request.setStatus(newStatus);", penjelasan: "Mengubah status request menjadi status baru (APPROVED atau WAITING_DIRECTOR)." },
+        { baris: 22, kode: "", penjelasan: "Baris kosong." },
+        { baris: 23, kode: "            // Hentikan di sini", penjelasan: "Komentar yang menandakan bahwa setelah ini tidak ada pemanggilan next.handle() secara otomatis. Jika status menjadi WAITING_DIRECTOR, maka pemanggilan selanjutnya harus dilakukan oleh client/controller." },
+        { baris: 24, kode: "        } else if (next != null) {", penjelasan: "Jika status request BUKAN WAITING_DIVISION_HEAD, maka periksa apakah ada handler berikutnya." },
+        { baris: 25, kode: "            next.handle(request);", penjelasan: "Meneruskan request ke handler berikutnya dalam rantai." },
+        { baris: 26, kode: "        }", penjelasan: "Penutup if-else." },
+        { baris: 27, kode: "    }", penjelasan: "Penutup method handle." },
+        { baris: 28, kode: "}", penjelasan: "Penutup kelas DivisionHeadHandler." }
+    ];
+
+    function renderTable(filterText = "") {
+        const tbody = document.getElementById("tableBody");
+        tbody.innerHTML = "";
+        const lowerFilter = filterText.trim().toLowerCase();
+        
+        let filteredRows = rowsData;
+        if (lowerFilter !== "") {
+            filteredRows = rowsData.filter(row => 
+                row.kode.toLowerCase().includes(lowerFilter) || 
+                row.penjelasan.toLowerCase().includes(lowerFilter)
+            );
+        }
+        
+        const statsSpan = document.getElementById("statsCount");
+        statsSpan.textContent = `Menampilkan ${filteredRows.length} dari ${rowsData.length} baris`;
+        
+        if (filteredRows.length === 0) {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `<td colspan="3" style="text-align:center; padding:2rem;">🔎 Tidak ditemukan hasil untuk "${filterText}"</td>`;
+            tbody.appendChild(tr);
+            return;
+        }
+        
+        for (const row of filteredRows) {
+            const tr = document.createElement("tr");
+            const tdBaris = document.createElement("td");
+            tdBaris.textContent = row.baris;
+            const tdKode = document.createElement("td");
+            tdKode.textContent = row.kode === "" ? " " : row.kode;
+            const tdPenjelasan = document.createElement("td");
+            tdPenjelasan.textContent = row.penjelasan;
+            tr.appendChild(tdBaris);
+            tr.appendChild(tdKode);
+            tr.appendChild(tdPenjelasan);
+            tbody.appendChild(tr);
+        }
+    }
+    
+    const searchInput = document.getElementById("searchInput");
+    searchInput.addEventListener("input", (e) => {
+        renderTable(e.target.value);
+    });
+    
+    renderTable();
+</script>
+</body>
+</html>
