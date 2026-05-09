@@ -200,6 +200,46 @@
             margin: 15px 0;
             border-radius: 8px;
         }
+		
+		 .analisa-links {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin: 25px 0 10px;
+        }
+        .analisa-links h4 {
+            margin-top: 0;
+            margin-bottom: 12px;
+            color: #1f6392;
+        }
+        .analisa-links ul {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .analisa-links li {
+            margin: 0;
+        }
+        .analisa-links a {
+            display: inline-block;
+            background: #eef2ff;
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 10pt;
+            text-decoration: none;
+            color: #1e40af;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .analisa-links a:hover {
+            background: #c7d2fe;
+            transform: translateY(-2px);
+        }
+
 
  /* ========== FLOWCHART CSS MODERN ========== */
         .flowchart-modern {
@@ -750,27 +790,27 @@ public static ApprovalHandler createWorkflow() {
     </ul>
 
     <!-- ==================== BAB 6 – USER TESTING ==================== -->
-    <h2>BAB 6 – USER TESTING & ITERASI</h2>
+    <h2>BAB 6 – ANALISA PROGRAM JAVA</h2>
     
-    <h3>6.1 Metodologi Testing</h3>
-    <p>Pengujian dilakukan terhadap 3 responden (berbeda dari responden riset awal) dengan skenario: membuat pengajuan, approve sebagai Manager, melanjutkan sebagai Kepala Divisi/Direksi, serta melihat history approval.</p>
-    
-    <h3>6.2 Hasil Testing & Feedback</h3>
-    <table>
-        <thead><tr><th>Responden</th><th>Skenario 1 (submit)</th><th>Skenario 2 (Manager approve)</th><th>Skenario 3 (lanjut role berikutnya)</th></tr></thead>
-        <tbody><tr><td>R1 (Siska)</td><td>✅ sukses</td><td>✅ sukses</td><td>⚠️ butuh tooltip</td></tr>
-        <tr><td>R2 (Bowo)</td><td>✅ sukses</td><td>✅ sukses</td><td>✅ sukses</td></tr>
-        <tr><td>R3 (Dewi)</td><td>✅ sukses</td><td>✅ sukses</td><td>✅ sukses</td></tr></tbody>
-    </table>
-    <p><strong>Tingkat keberhasilan tugas: 8 dari 9 (88.9%).</strong></p>
-    
-    <h3>6.3 Iterasi Desain</h3>
-    <table>
-        <thead><tr><th>Iterasi</th><th>Sebelum</th><th>Sesudah</th><th>Dasar Feedback</th></tr></thead>
-        <tbody><tr><td>1</td><td>Tombol approve ukuran standar</td><td>Tombol approve diperjelas dengan ikon centang &amp; warna hijau</td><td>R1: "Tombol approve kurang menonjol"</td></tr>
-        <tr><td>2</td><td>Status hanya teks</td><td>Menambahkan badge warna untuk setiap status</td><td>R2: "Status lebih jelas kalau ada warna"</td></tr>
-        <tr><td>3</td><td>Tidak ada informasi nominal maksimal</td><td>Menampilkan teks "Max 1 Milyar" pada form submit</td><td>R3: "Perlu batasan nominal"</td></tr></tbody>
-    </table>
+    <h3>6.1 List Program Java </h3>
+    <!-- ANALISA KODE: Daftar hyperlink ke file analisa komponen -->
+    <div class="analisa-links">
+        <h4>📄 Analisis Mendalam Setiap Komponen Kode</h4>
+        <p style="margin-bottom: 8px; font-size: 10pt;">Klik tautan berikut untuk melihat analisis per baris kode dari setiap file Java dan konfigurasi:</p>
+        <ul>
+            <li><a href="analisaProcurementRequest.html" target="_blank">📦 ProcurementRequest.java</a></li>
+            <li><a href="analisaApprovalStatus.html" target="_blank">🚦 ApprovalStatus.java</a></li>
+            <li><a href="analisaApprovalHandler.html" target="_blank">🔗 ApprovalHandler.java (interface)</a></li>
+            <li><a href="analisaManagerHandler.html" target="_blank">👨‍💼 ManagerHandler.java</a></li>
+            <li><a href="analisaDivisionHeadHandler.html" target="_blank">📋 DivisionHeadHandler.java</a></li>
+            <li><a href="analisaDirectorHandler.html" target="_blank">👔 DirectorHandler.java</a></li>
+            <li><a href="analisaApprovalHandlerFactory.html" target="_blank">🏭 ApprovalHandlerFactory.java</a></li>
+            <li><a href="analisaApprovalService.html" target="_blank">⚙️ ApprovalService.java</a></li>
+            <li><a href="analisaApprovalController.html" target="_blank">🎮 ApprovalController.java</a></li>
+            <li><a href="analisaProcurementApplication.html" target="_blank">🚀 ProcurementApplication.java</a></li>
+            <li><a href="analisapom.html" target="_blank">📦 pom.xml (Maven)</a></li>
+        </ul>
+    </div>
 
     <!-- ==================== BAB 7 – FULL SCRIPT PROGRAM JAVA ==================== -->
     <h2>BAB 7 – FULL SCRIPT PROGRAM JAVA</h2>
